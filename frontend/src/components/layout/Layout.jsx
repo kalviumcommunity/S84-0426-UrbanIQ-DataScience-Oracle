@@ -6,9 +6,9 @@ import './layout.css'
 function Layout() {
   return (
     <div className="app-shell">
-      <Navbar />
-      <div className="app-shell__body">
-        <Sidebar />
+      <Sidebar />
+      <div className="app-shell__main-column">
+        <Navbar />
         <main className="app-shell__content">
           <Outlet />
         </main>

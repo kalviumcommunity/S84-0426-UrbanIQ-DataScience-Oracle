@@ -1,17 +1,21 @@
 import Card from '../components/ui/Card.jsx'
-import Button from '../components/ui/Button.jsx'
 import Loader from '../components/ui/Loader.jsx'
 import { fetchComplaintsList } from '../services/api.js'
 import { useEffect, useMemo, useState } from 'react'
 import './complaints.css'
 
+const fallbackComplaints = [
+  { title: 'Broken water pipe on MG Road', category: 'Water Supply', area: 'Ward 12', status: 'Open' },
+  { title: 'Garbage not collected for 3 days', category: 'Garbage', area: 'Ward 5', status: 'Pending' },
+  { title: 'Large pothole near City Mall', category: 'Road Damage', area: 'Ward 8', status: 'Open' },
+  { title: 'Street light not working', category: 'Street Lights', area: 'Ward 3', status: 'Resolved' },
+  { title: 'Drainage overflow in market area', category: 'Drainage', area: 'Ward 15', status: 'Pending' },
+  { title: 'Water supply disruption', category: 'Water Supply', area: 'Ward 7', status: 'Resolved' },
+  { title: 'Illegal dumping near school', category: 'Garbage', area: 'Ward 2', status: 'Open' },
+]
+
 function Complaints() {
   const [complaints, setComplaints] = useState([])
-  const [searchQuery, setSearchQuery] = useState('')
-  const [categoryFilter, setCategoryFilter] = useState('all')
-  const [statusFilter, setStatusFilter] = useState('all')
-  const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 5
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -46,31 +50,13 @@ function Complaints() {
     }
   }, [])
 
-  const filteredComplaints = useMemo(() => {
-    return complaints.filter((complaint) => {
-      const matchesTitle = complaint.title?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false
-      const matchesCategory =
-        categoryFilter === 'all' || complaint.category?.toLowerCase() === categoryFilter
-      const matchesStatus =
-        statusFilter === 'all' || complaint.status?.toLowerCase() === statusFilter
-
-      return matchesTitle && matchesCategory && matchesStatus
-    })
-  }, [complaints, searchQuery, categoryFilter, statusFilter])
-
-  const totalPages = Math.max(1, Math.ceil(filteredComplaints.length / itemsPerPage))
-  const startIndex = (currentPage - 1) * itemsPerPage
-  const paginatedComplaints = filteredComplaints.slice(startIndex, startIndex + itemsPerPage)
-
-  useEffect(() => {
-    setCurrentPage(1)
-  }, [searchQuery, categoryFilter, statusFilter])
-
-  useEffect(() => {
-    if (currentPage > totalPages) {
-      setCurrentPage(totalPages)
+  const displayComplaints = useMemo(() => {
+    if (complaints.length > 0) {
+      return complaints.slice(0, 7)
     }
-  }, [currentPage, totalPages])
+
+    return fallbackComplaints
+  }, [complaints])
 
   if (isLoading) {
     return (
@@ -84,55 +70,32 @@ function Complaints() {
     <div className="complaints-page">
       <div className="complaints-page__header">
         <h1>Complaints</h1>
-        <p>Complaints data with search and filters powered by the API.</p>
+        <p>All citizen grievances and their current status</p>
       </div>
 
-      <Card className="complaints-page__filters-card">
-        <div className="complaints-page__filters">
-          <label className="complaints-page__field">
-            <span>Search by title</span>
-            <input
-              type="search"
-              placeholder="Search complaints"
-              value={searchQuery}
-              onChange={(event) => setSearchQuery(event.target.value)}
-            />
-          </label>
-          <label className="complaints-page__field">
-            <span>Category</span>
-            <select value={categoryFilter} onChange={(event) => setCategoryFilter(event.target.value)}>
-              <option value="all">All categories</option>
-              <option value="water">Water</option>
-              <option value="lighting">Lighting</option>
-              <option value="waste">Waste</option>
-              <option value="roads">Roads</option>
-            </select>
-          </label>
-          <label className="complaints-page__field">
-            <span>Status</span>
-            <select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)}>
-              <option value="all">All statuses</option>
-              <option value="open">Open</option>
-              <option value="pending">Pending</option>
-              <option value="resolved">Resolved</option>
-            </select>
-          </label>
+      <Card className="complaints-page__table-card">
+        <div className="complaints-page__table-header">
+          <div>
+            <h2>Recent Complaints</h2>
+            <p>Latest citizen grievances</p>
+          </div>
+          <a href="#" className="complaints-page__view-all">
+            View all
+          </a>
         </div>
-      </Card>
 
-      <div className="complaints-page__table-wrap">
-        <table className="complaints-page__table">
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Category</th>
-              <th>Area</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {paginatedComplaints.length > 0 ? (
-              paginatedComplaints.map((complaint) => (
+        <div className="complaints-page__table-wrap">
+          <table className="complaints-page__table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Area</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {displayComplaints.map((complaint) => (
                 <tr key={complaint.id ?? complaint.title}>
                   <td>{complaint.title ?? '-'}</td>
                   <td>{complaint.category ?? '-'}</td>
@@ -147,36 +110,11 @@ function Complaints() {
                     </span>
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="4">No complaints match the current filters.</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      <div className="complaints-page__pagination">
-        <p className="complaints-page__pagination-info">
-          Showing {filteredComplaints.length === 0 ? 0 : startIndex + 1} to{' '}
-          {Math.min(startIndex + itemsPerPage, filteredComplaints.length)} of {filteredComplaints.length} complaints
-        </p>
-        <div className="complaints-page__pagination-actions">
-          <Button disabled={currentPage === 1} onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}>
-            Previous
-          </Button>
-          <span className="complaints-page__page-count">
-            Page {currentPage} of {totalPages}
-          </span>
-          <Button
-            disabled={currentPage === totalPages}
-            onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
-          >
-            Next
-          </Button>
+              ))}
+            </tbody>
+          </table>
         </div>
-      </div>
+      </Card>
 
       {error ? <div className="complaints-page__error">{error}</div> : null}
     </div>
