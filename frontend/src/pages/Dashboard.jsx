@@ -1,16 +1,20 @@
 import Card from '../components/ui/Card.jsx'
 import './dashboard.css'
 
-const summaryCards = ['Total', 'Resolved', 'Pending']
+const summaryCards = [
+  { label: 'Total complaints', value: '1,240' },
+  { label: 'Resolved complaints', value: '980' },
+  { label: 'Pending complaints', value: '260' },
+]
 
 function Dashboard() {
   return (
     <div className="dashboard">
       <section className="dashboard__summary">
-        {summaryCards.map((label) => (
-          <Card key={label} className="dashboard__summary-card">
-            <p className="dashboard__label">{label}</p>
-            <div className="dashboard__value">--</div>
+        {summaryCards.map((card) => (
+          <Card key={card.label} className="dashboard__summary-card">
+            <p className="dashboard__label">{card.label}</p>
+            <div className="dashboard__value">{card.value}</div>
           </Card>
         ))}
       </section>
