@@ -15,6 +15,44 @@
   color: var(--muted);
 }
 
+.complaints-page__filters-card {
+  padding: 20px;
+}
+
+.complaints-page__filters {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 16px;
+}
+
+.complaints-page__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.complaints-page__field span {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.complaints-page__field input,
+.complaints-page__field select {
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid rgba(11, 46, 51, 0.14);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.75);
+  color: var(--text);
+}
+
+.complaints-page__field input::placeholder {
+  color: rgba(93, 118, 122, 0.8);
+}
+
 .complaints-page__table-wrap {
   overflow-x: auto;
 }
@@ -72,6 +110,10 @@
 }
 
 @media (max-width: 768px) {
+  .complaints-page__filters {
+    grid-template-columns: 1fr;
+  }
+
   .complaints-page__table th,
   .complaints-page__table td {
     padding: 12px;
