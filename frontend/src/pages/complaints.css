@@ -94,6 +94,14 @@
   color: var(--text);
 }
 
+.complaints-page__table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.complaints-page__table tbody tr:hover {
+  background: #f9fafb;
+}
+
 .complaints-page__error {
   padding: 14px 16px;
   border-radius: 14px;
