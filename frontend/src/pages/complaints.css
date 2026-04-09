@@ -1,7 +1,7 @@
 .complaints-page {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
 }
 
 .complaints-page__state {
@@ -71,6 +71,10 @@
   overflow: hidden;
 }
 
+.complaints-page__table td:first-child {
+  width: 48%;
+}
+
 .complaints-page__table th,
 .complaints-page__table td {
   padding: 14px 16px;
@@ -123,9 +127,52 @@
   background: rgba(182, 227, 199, 0.75);
 }
 
+.complaints-page__pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 4px 2px 0;
+}
+
+.complaints-page__pagination-info {
+  margin: 0;
+  color: var(--muted);
+}
+
+.complaints-page__pagination-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.complaints-page__page-count {
+  min-width: 110px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.complaints-page__pagination-actions .ui-button {
+  min-width: 104px;
+}
+
+.complaints-page__pagination-actions .ui-button:disabled {
+  opacity: 0.45;
+}
+
 @media (max-width: 768px) {
   .complaints-page__filters {
     grid-template-columns: 1fr;
+  }
+
+  .complaints-page__pagination {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .complaints-page__pagination-actions {
+    justify-content: space-between;
   }
 
   .complaints-page__table th,
