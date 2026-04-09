@@ -1,10 +1,9 @@
 .ui-card {
-  background: rgba(255, 255, 255, 0.76);
-  border: 1px solid rgba(11, 46, 51, 0.1);
-  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid rgba(11, 46, 51, 0.08);
+  border-radius: 16px;
   padding: 24px;
-  box-shadow: 0 10px 30px rgba(11, 46, 51, 0.08);
-  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 20px rgba(11, 46, 51, 0.06);
 }
 
 .ui-button {
@@ -26,7 +25,7 @@
 }
 
 .ui-button:hover:not(:disabled) {
-  background: #436a6f;
+  background: #3f676d;
   transform: translateY(-1px);
   box-shadow: 0 10px 20px rgba(11, 46, 51, 0.14);
 }
