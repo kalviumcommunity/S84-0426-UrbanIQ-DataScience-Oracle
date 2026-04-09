@@ -1,30 +1,89 @@
 import Card from '../components/ui/Card.jsx'
+import Loader from '../components/ui/Loader.jsx'
+import { fetchComplaintsList } from '../services/api.js'
+import { useEffect, useMemo, useState } from 'react'
 import './complaints.css'
 
-const complaints = [
-  { title: 'Water leakage near main road', category: 'Water', area: 'Zone A', status: 'Open' },
-  { title: 'Broken streetlight on Elm Street', category: 'Lighting', area: 'Zone C', status: 'Pending' },
-  { title: 'Garbage not collected', category: 'Waste', area: 'Zone B', status: 'Resolved' },
-  { title: 'Damaged road patch', category: 'Roads', area: 'Zone D', status: 'Open' },
-]
-
 function Complaints() {
+  const [complaints, setComplaints] = useState([])
+  const [searchQuery, setSearchQuery] = useState('')
+  const [categoryFilter, setCategoryFilter] = useState('all')
+  const [statusFilter, setStatusFilter] = useState('all')
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    let isMounted = true
+
+    async function loadComplaints() {
+      try {
+        setIsLoading(true)
+        const response = await fetchComplaintsList()
+
+        if (isMounted) {
+          setComplaints(response.data ?? [])
+          setError('')
+        }
+      } catch {
+        if (isMounted) {
+          setError('Unable to load complaints.')
+          setComplaints([])
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false)
+        }
+      }
+    }
+
+    loadComplaints()
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
+
+  const filteredComplaints = useMemo(() => {
+    return complaints.filter((complaint) => {
+      const matchesTitle = complaint.title?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false
+      const matchesCategory =
+        categoryFilter === 'all' || complaint.category?.toLowerCase() === categoryFilter
+      const matchesStatus =
+        statusFilter === 'all' || complaint.status?.toLowerCase() === statusFilter
+
+      return matchesTitle && matchesCategory && matchesStatus
+    })
+  }, [complaints, searchQuery, categoryFilter, statusFilter])
+
+  if (isLoading) {
+    return (
+      <div className="complaints-page complaints-page__state">
+        <Loader />
+      </div>
+    )
+  }
+
   return (
     <div className="complaints-page">
       <div className="complaints-page__header">
         <h1>Complaints</h1>
-        <p>Static complaints table for the page layout.</p>
+        <p>Complaints data with search and filters powered by the API.</p>
       </div>
 
       <Card className="complaints-page__filters-card">
         <div className="complaints-page__filters">
           <label className="complaints-page__field">
             <span>Search by title</span>
-            <input type="search" placeholder="Search complaints" />
+            <input
+              type="search"
+              placeholder="Search complaints"
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+            />
           </label>
           <label className="complaints-page__field">
             <span>Category</span>
-            <select defaultValue="all">
+            <select value={categoryFilter} onChange={(event) => setCategoryFilter(event.target.value)}>
               <option value="all">All categories</option>
               <option value="water">Water</option>
               <option value="lighting">Lighting</option>
@@ -34,7 +93,7 @@ function Complaints() {
           </label>
           <label className="complaints-page__field">
             <span>Status</span>
-            <select defaultValue="all">
+            <select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value)}>
               <option value="all">All statuses</option>
               <option value="open">Open</option>
               <option value="pending">Pending</option>
@@ -55,21 +114,33 @@ function Complaints() {
             </tr>
           </thead>
           <tbody>
-            {complaints.map((complaint) => (
-              <tr key={complaint.title}>
-                <td>{complaint.title}</td>
-                <td>{complaint.category}</td>
-                <td>{complaint.area}</td>
-                <td>
-                  <span className={`complaints-page__status complaints-page__status--${complaint.status.toLowerCase()}`}>
-                    {complaint.status}
-                  </span>
-                </td>
+            {filteredComplaints.length > 0 ? (
+              filteredComplaints.map((complaint) => (
+                <tr key={complaint.id ?? complaint.title}>
+                  <td>{complaint.title ?? '-'}</td>
+                  <td>{complaint.category ?? '-'}</td>
+                  <td>{complaint.area ?? '-'}</td>
+                  <td>
+                    <span
+                      className={`complaints-page__status complaints-page__status--${
+                        complaint.status?.toLowerCase() ?? 'open'
+                      }`}
+                    >
+                      {complaint.status ?? '-'}
+                    </span>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="4">No complaints match the current filters.</td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
+
+      {error ? <div className="complaints-page__error">{error}</div> : null}
     </div>
   )
 }

@@ -1,5 +1,3 @@
-import Card from '../components/ui/Card.jsx'
-import './dashboard.css'
 import {
   CartesianGrid,
   Cell,
@@ -13,34 +11,88 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
-
-const summaryCards = [
-  { label: 'Total complaints', value: '1,240' },
-  { label: 'Resolved complaints', value: '980' },
-  { label: 'Pending complaints', value: '260' },
-]
-
-const complaintsTrend = [
-  { month: 'Jan', complaints: 120 },
-  { month: 'Feb', complaints: 180 },
-  { month: 'Mar', complaints: 155 },
-  { month: 'Apr', complaints: 210 },
-  { month: 'May', complaints: 190 },
-  { month: 'Jun', complaints: 230 },
-]
-
-const complaintCategories = [
-  { name: 'Roads', value: 35 },
-  { name: 'Water', value: 25 },
-  { name: 'Waste', value: 20 },
-  { name: 'Lighting', value: 20 },
-]
+import { useEffect, useState } from 'react'
+import { fetchDashboardData } from '../services/api.js'
+import Card from '../components/ui/Card.jsx'
+import Loader from '../components/ui/Loader.jsx'
+import './dashboard.css'
 
 const pieColors = ['#0B2E33', '#4F7C82', '#7FA7AC', '#B8E3E9']
 
+const emptyDashboard = {
+  summaryCards: [],
+  complaintsTrend: [],
+  complaintCategories: [],
+  recentComplaints: [],
+}
+
+function normalizeDashboardData(data) {
+  return {
+    summaryCards:
+      data?.summaryCards ?? data?.summary ?? [
+        { label: 'Total complaints', value: 0 },
+        { label: 'Resolved complaints', value: 0 },
+        { label: 'Pending complaints', value: 0 },
+      ],
+    complaintsTrend: data?.complaintsTrend ?? data?.trend ?? [],
+    complaintCategories: data?.complaintCategories ?? data?.categories ?? [],
+    recentComplaints: data?.recentComplaints ?? data?.complaints ?? [],
+  }
+}
+
 function Dashboard() {
+  const [dashboardData, setDashboardData] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    let isMounted = true
+
+    async function loadDashboardData() {
+      try {
+        setIsLoading(true)
+        const response = await fetchDashboardData()
+
+        if (isMounted) {
+          setDashboardData(normalizeDashboardData(response.data))
+          setError('')
+        }
+      } catch {
+        if (isMounted) {
+          setError('Unable to load dashboard data.')
+          setDashboardData(emptyDashboard)
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false)
+        }
+      }
+    }
+
+    loadDashboardData()
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
+
+  if (isLoading) {
+    return (
+      <div className="dashboard dashboard__state">
+        <Loader />
+      </div>
+    )
+  }
+
+  const summaryCards = dashboardData?.summaryCards ?? emptyDashboard.summaryCards
+  const complaintsTrend = dashboardData?.complaintsTrend ?? emptyDashboard.complaintsTrend
+  const complaintCategories = dashboardData?.complaintCategories ?? emptyDashboard.complaintCategories
+  const recentComplaints = dashboardData?.recentComplaints ?? emptyDashboard.recentComplaints
+
   return (
     <div className="dashboard">
+      {error ? <div className="dashboard__error">{error}</div> : null}
+
       <section className="dashboard__summary">
         {summaryCards.map((card) => (
           <Card key={card.label} className="dashboard__summary-card">
@@ -121,9 +173,20 @@ function Dashboard() {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td colSpan="4">No complaint data yet.</td>
-                </tr>
+                {recentComplaints.length > 0 ? (
+                  recentComplaints.map((complaint) => (
+                    <tr key={complaint.id ?? complaint.title}>
+                      <td>{complaint.title ?? '-'}</td>
+                      <td>{complaint.category ?? '-'}</td>
+                      <td>{complaint.area ?? '-'}</td>
+                      <td>{complaint.status ?? '-'}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="4">No complaint data available.</td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
