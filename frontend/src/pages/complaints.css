@@ -1,0 +1,79 @@
+.complaints-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.complaints-page__header h1 {
+  margin: 0 0 8px;
+  font-size: 1.35rem;
+  color: var(--dark);
+}
+
+.complaints-page__header p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.complaints-page__table-wrap {
+  overflow-x: auto;
+}
+
+.complaints-page__table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.58);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.complaints-page__table th,
+.complaints-page__table td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid rgba(11, 46, 51, 0.1);
+}
+
+.complaints-page__table th {
+  background: rgba(11, 46, 51, 0.04);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.complaints-page__table td {
+  color: var(--text);
+}
+
+.complaints-page__status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 12px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.complaints-page__status--open {
+  color: #0b2e33;
+  background: rgba(184, 227, 233, 0.85);
+}
+
+.complaints-page__status--pending {
+  color: #5c4b12;
+  background: rgba(243, 215, 153, 0.65);
+}
+
+.complaints-page__status--resolved {
+  color: #1f5a35;
+  background: rgba(182, 227, 199, 0.75);
+}
+
+@media (max-width: 768px) {
+  .complaints-page__table th,
+  .complaints-page__table td {
+    padding: 12px;
+  }
+}
