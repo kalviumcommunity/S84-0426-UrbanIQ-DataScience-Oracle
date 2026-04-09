@@ -1,4 +1,5 @@
 import Card from '../components/ui/Card.jsx'
+import Button from '../components/ui/Button.jsx'
 import Loader from '../components/ui/Loader.jsx'
 import { fetchComplaintsList } from '../services/api.js'
 import { useEffect, useMemo, useState } from 'react'
@@ -9,6 +10,8 @@ function Complaints() {
   const [searchQuery, setSearchQuery] = useState('')
   const [categoryFilter, setCategoryFilter] = useState('all')
   const [statusFilter, setStatusFilter] = useState('all')
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 5
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
 
@@ -54,6 +57,20 @@ function Complaints() {
       return matchesTitle && matchesCategory && matchesStatus
     })
   }, [complaints, searchQuery, categoryFilter, statusFilter])
+
+  const totalPages = Math.max(1, Math.ceil(filteredComplaints.length / itemsPerPage))
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const paginatedComplaints = filteredComplaints.slice(startIndex, startIndex + itemsPerPage)
+
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [searchQuery, categoryFilter, statusFilter])
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages)
+    }
+  }, [currentPage, totalPages])
 
   if (isLoading) {
     return (
@@ -114,8 +131,8 @@ function Complaints() {
             </tr>
           </thead>
           <tbody>
-            {filteredComplaints.length > 0 ? (
-              filteredComplaints.map((complaint) => (
+            {paginatedComplaints.length > 0 ? (
+              paginatedComplaints.map((complaint) => (
                 <tr key={complaint.id ?? complaint.title}>
                   <td>{complaint.title ?? '-'}</td>
                   <td>{complaint.category ?? '-'}</td>
@@ -138,6 +155,27 @@ function Complaints() {
             )}
           </tbody>
         </table>
+      </div>
+
+      <div className="complaints-page__pagination">
+        <p className="complaints-page__pagination-info">
+          Showing {filteredComplaints.length === 0 ? 0 : startIndex + 1} to{' '}
+          {Math.min(startIndex + itemsPerPage, filteredComplaints.length)} of {filteredComplaints.length} complaints
+        </p>
+        <div className="complaints-page__pagination-actions">
+          <Button disabled={currentPage === 1} onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}>
+            Previous
+          </Button>
+          <span className="complaints-page__page-count">
+            Page {currentPage} of {totalPages}
+          </span>
+          <Button
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+          >
+            Next
+          </Button>
+        </div>
       </div>
 
       {error ? <div className="complaints-page__error">{error}</div> : null}
