@@ -37,6 +37,29 @@
   gap: 20px;
 }
 
+.dashboard__charts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.dashboard__chart-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.dashboard__chart-card h2 {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--dark);
+}
+
+.dashboard__chart {
+  min-height: 280px;
+  padding: 8px 0 0;
+}
+
 .dashboard__section-header {
   margin-bottom: 16px;
 }
@@ -88,6 +111,10 @@
 
 @media (max-width: 900px) {
   .dashboard__summary {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard__charts {
     grid-template-columns: 1fr;
   }
 }
