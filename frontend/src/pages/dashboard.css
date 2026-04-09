@@ -4,6 +4,20 @@
   gap: 24px;
 }
 
+.dashboard__state {
+  align-items: center;
+  justify-content: center;
+  min-height: 320px;
+}
+
+.dashboard__error {
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.75);
+  color: #7a2f2f;
+  border: 1px solid rgba(122, 47, 47, 0.16);
+}
+
 .dashboard__summary {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
