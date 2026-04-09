@@ -1,0 +1,59 @@
+.ui-card {
+  background: rgba(255, 255, 255, 0.76);
+  border: 1px solid rgba(11, 46, 51, 0.1);
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(11, 46, 51, 0.08);
+  backdrop-filter: blur(10px);
+}
+
+.ui-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--primary);
+  color: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.ui-button:hover:not(:disabled) {
+  background: #436a6f;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(11, 46, 51, 0.14);
+}
+
+.ui-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.ui-loader {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+}
+
+.ui-loader__spinner {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 3px solid rgba(79, 124, 130, 0.25);
+  border-top-color: var(--primary);
+  animation: ui-spin 0.8s linear infinite;
+}
+
+@keyframes ui-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
