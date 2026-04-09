@@ -1,3 +1,4 @@
+import Card from '../components/ui/Card.jsx'
 import './complaints.css'
 
 const complaints = [
@@ -14,6 +15,34 @@ function Complaints() {
         <h1>Complaints</h1>
         <p>Static complaints table for the page layout.</p>
       </div>
+
+      <Card className="complaints-page__filters-card">
+        <div className="complaints-page__filters">
+          <label className="complaints-page__field">
+            <span>Search by title</span>
+            <input type="search" placeholder="Search complaints" />
+          </label>
+          <label className="complaints-page__field">
+            <span>Category</span>
+            <select defaultValue="all">
+              <option value="all">All categories</option>
+              <option value="water">Water</option>
+              <option value="lighting">Lighting</option>
+              <option value="waste">Waste</option>
+              <option value="roads">Roads</option>
+            </select>
+          </label>
+          <label className="complaints-page__field">
+            <span>Status</span>
+            <select defaultValue="all">
+              <option value="all">All statuses</option>
+              <option value="open">Open</option>
+              <option value="pending">Pending</option>
+              <option value="resolved">Resolved</option>
+            </select>
+          </label>
+        </div>
+      </Card>
 
       <div className="complaints-page__table-wrap">
         <table className="complaints-page__table">
