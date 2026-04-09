@@ -48,12 +48,12 @@
   flex: 1;
   display: flex;
   min-height: 0;
-  background: #b8e3e9;
+  background: #f9fafb;
 }
 
 .sidebar {
   width: 16rem;
-  min-height: 0;
+  min-height: calc(100vh - 64px);
   background: #0b2e33;
   color: #ffffff;
   padding: 16px;
@@ -94,8 +94,8 @@
 
 .app-shell__content {
   flex: 1;
-  padding: 24px;
-  background: #b8e3e9;
+  padding: 0;
+  background: #f9fafb;
   overflow: auto;
 }
 

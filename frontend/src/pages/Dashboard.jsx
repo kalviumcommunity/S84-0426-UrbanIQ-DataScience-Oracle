@@ -16,76 +16,85 @@ const recentComplaints = [
 
 function ChartPlaceholder() {
   return (
-    <div className="dashboard__chart-placeholder">
-      Loading chart...
+    <div className="dashboard-placeholder">
+      Chart will appear here
     </div>
   )
 }
 
 function Dashboard() {
   return (
-    <div className="dashboard">
-      <section className="dashboard__summary">
+    <div className="dashboard-page">
+      <div className="dashboard-page__container">
+      <section className="dashboard-page__stats-grid">
         {summaryCards.map((card) => (
-          <Card key={card.label} className="dashboard__summary-card">
-            <p className="dashboard__label">{card.label}</p>
-            <div className="dashboard__value">{card.value}</div>
+          <Card key={card.label} className="dashboard-card dashboard-card--stat">
+            <p className="dashboard-label">{card.label}</p>
+            <h2 className="dashboard-value">{card.value}</h2>
           </Card>
         ))}
       </section>
 
-      <section className="dashboard__grid">
-        <Card>
-          <div className="dashboard__section-header">
-            <h1>Analytics Overview</h1>
-            <p>Dashboard insights and trends.</p>
-          </div>
-          <div className="dashboard__charts">
-            <div className="dashboard__chart-card">
-              <h2>Complaints over time</h2>
-              <ChartPlaceholder />
-            </div>
+      <Card className="dashboard-card dashboard-card--section">
+        <div className="dashboard-section-header">
+          <h2>Analytics Overview</h2>
+          <p>Dashboard insights and trends.</p>
+        </div>
 
-            <div className="dashboard__chart-card">
-              <h2>Complaint categories</h2>
-              <ChartPlaceholder />
-            </div>
+        <div className="dashboard-page__charts-grid">
+          <div className="dashboard-chart-card">
+            <h3>Complaints over time</h3>
+            <ChartPlaceholder />
           </div>
-        </Card>
 
-        <Card>
-          <div className="dashboard__section-header">
-            <h1>Recent Complaints</h1>
-            <p>Static table shell for the latest complaint entries.</p>
+          <div className="dashboard-chart-card">
+            <h3>Complaint categories</h3>
+            <ChartPlaceholder />
           </div>
-          <div className="dashboard__table-shell">
-            <table className="dashboard__table">
-              <thead>
-                <tr>
-                  <th>Title</th>
-                  <th>Category</th>
-                  <th>Area</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {recentComplaints.map((complaint) => (
+        </div>
+      </Card>
+
+      <Card className="dashboard-card dashboard-card--section">
+        <div className="dashboard-section-header">
+          <h2>Recent Complaints</h2>
+          <p>Latest records across the city network.</p>
+        </div>
+
+        <div className="dashboard-table-wrap">
+          <table className="dashboard-table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Area</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {recentComplaints.map((complaint) => {
+                const statusClass =
+                  complaint.status === 'Resolved'
+                    ? 'bg-emerald-50 text-emerald-700'
+                    : complaint.status === 'Pending'
+                      ? 'bg-amber-50 text-amber-700'
+                      : 'bg-sky-50 text-sky-700'
+
+                return (
                   <tr key={complaint.title}>
                     <td>{complaint.title}</td>
                     <td>{complaint.category}</td>
                     <td>{complaint.area}</td>
                     <td>
-                      <span className={`dashboard__status dashboard__status--${complaint.status.toLowerCase()}`}>
-                        {complaint.status}
-                      </span>
+                      <span className={`dashboard-status ${statusClass}`}>{complaint.status}</span>
                     </td>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </Card>
-      </section>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+      </div>
     </div>
   )
 }
