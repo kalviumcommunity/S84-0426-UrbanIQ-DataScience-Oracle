@@ -14,7 +14,7 @@ import {
 import Button from '../components/ui/Button.jsx'
 import Card from '../components/ui/Card.jsx'
 import Loader from '../components/ui/Loader.jsx'
-import { fetchDashboardData, resolveComplaint } from '../services/api.js'
+import { fetchDashboardData, resolveComplaint, removeComplaint } from '../services/api.js'
 import './dashboard.css'
 
 const statDefinitions = [
@@ -110,6 +110,7 @@ function Dashboard() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [resolvingId, setResolvingId] = useState('')
+  const [removingId, setRemovingId] = useState('')
 
   useEffect(() => {
     let isMounted = true
@@ -151,6 +152,21 @@ function Dashboard() {
       setDashboard(response.data)
     } finally {
       setResolvingId('')
+    }
+  }
+
+  async function handleRemove(complaintId) {
+    if (!window.confirm('Are you sure you want to remove this complaint?')) {
+      return
+    }
+
+    try {
+      setRemovingId(complaintId)
+      await removeComplaint(complaintId)
+      const response = await fetchDashboardData()
+      setDashboard(response.data)
+    } finally {
+      setRemovingId('')
     }
   }
 
@@ -286,17 +302,29 @@ function Dashboard() {
                       </span>
                     </td>
                     <td>
-                      <Button
-                        className="dashboard-resolve-button"
-                        onClick={() => handleResolve(complaint.id)}
-                        disabled={complaint.status === 'resolved' || resolvingId === complaint.id}
-                      >
-                        {complaint.status === 'resolved'
-                          ? 'Resolved'
-                          : resolvingId === complaint.id
-                            ? 'Updating...'
-                            : 'Mark resolved'}
-                      </Button>
+                      <div className="dashboard-action-group">
+                        <Button
+                          className="dashboard-resolve-button"
+                          onClick={() => handleResolve(complaint.id)}
+                          disabled={complaint.status === 'resolved' || resolvingId === complaint.id || removingId === complaint.id}
+                        >
+                          {complaint.status === 'resolved'
+                            ? 'Resolved'
+                            : resolvingId === complaint.id
+                              ? 'Updating...'
+                              : 'Mark resolved'}
+                        </Button>
+                        <Button
+                          className="dashboard-remove-button"
+                          onClick={() => handleRemove(complaint.id)}
+                          disabled={resolvingId === complaint.id || removingId === complaint.id}
+                          aria-label={`Remove ${complaint.title}`}
+                        >
+                          {removingId === complaint.id
+                            ? 'Removing...'
+                            : 'Remove'}
+                        </Button>
+                      </div>
                     </td>
                   </tr>
                 ))}

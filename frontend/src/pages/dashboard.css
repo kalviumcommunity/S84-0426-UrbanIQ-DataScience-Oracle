@@ -329,16 +329,37 @@
   box-shadow: 0 0 0 1px rgba(42, 139, 98, 0.22), 0 0 10px rgba(42, 139, 98, 0.16);
 }
 
-.dashboard-resolve-button {
+.dashboard-action-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dashboard-resolve-button,
+.dashboard-remove-button {
   min-height: 38px;
   padding: 0 14px;
   font-size: 0.92rem;
   transition: all 0.2s ease;
 }
 
-.dashboard-resolve-button:disabled {
+.dashboard-remove-button {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid rgba(220, 38, 38, 0.2);
+}
+
+.dashboard-remove-button:hover:not(:disabled) {
+  background: #fee2e2;
+  color: #b91c1c;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.12);
+}
+
+.dashboard-resolve-button:disabled,
+.dashboard-remove-button:disabled {
   background: #d5dee1;
   color: #4f5f63;
+  border-color: transparent;
   box-shadow: none;
 }
 

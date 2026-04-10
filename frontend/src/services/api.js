@@ -249,6 +249,15 @@ export function resolveComplaint(complaintId) {
   })
 }
 
+export function removeComplaint(complaintId) {
+  const complaints = ensureLocalStore()
+  const nextComplaints = complaints.filter((complaint) => complaint.id !== complaintId)
+
+  persistComplaints(nextComplaints)
+
+  return Promise.resolve({ success: true, id: complaintId })
+}
+
 export function fetchComplaintStore() {
   return Promise.resolve({ data: ensureLocalStore().map(normalizeComplaint) })
 }
