@@ -1,4 +1,15 @@
+import { useNavigate } from 'react-router-dom'
+import { getSession, logoutUser } from '../../services/auth.js'
+
 function Navbar() {
+  const navigate = useNavigate()
+  const session = getSession()
+
+  function handleLogout() {
+    logoutUser()
+    navigate('/get-started', { replace: true })
+  }
+
   return (
     <header className="topbar">
       <div className="topbar__brand-wrap">
@@ -7,7 +18,9 @@ function Navbar() {
         </div>
         <div>
           <h1 className="topbar__brand">Argus</h1>
-          <p className="topbar__brand-subtitle">Municipal Grievance Analytics</p>
+          <p className="topbar__brand-subtitle">
+            {session?.user?.role === 'admin' ? 'Admin complaint management' : 'Citizen complaint tracking'}
+          </p>
         </div>
       </div>
 
@@ -41,10 +54,14 @@ function Navbar() {
             </svg>
           </div>
           <div>
-            <span className="topbar__user-label">Admin</span>
-            <p className="topbar__user-subtitle">City Officer</p>
+            <span className="topbar__user-label">{session?.user?.name ?? 'User'}</span>
+            <p className="topbar__user-subtitle">{session?.user?.role === 'admin' ? 'City operations' : 'Citizen account'}</p>
           </div>
         </div>
+
+        <button className="topbar__logout-btn" type="button" onClick={handleLogout}>
+          Logout
+        </button>
       </div>
     </header>
   )
