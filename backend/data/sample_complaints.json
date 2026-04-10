@@ -1,0 +1,86 @@
+[
+  {
+    "complaint_text": "Deep pothole causing traffic slowdowns and vehicle damage.",
+    "category": "Roads",
+    "location": "Main St intersection with 5th Ave",
+    "date": "2026-04-01T08:30:00Z",
+    "status": "pending"
+  },
+  {
+    "complaint_text": "Streetlight has been out for over a week, making the sidewalk unsafe at night.",
+    "category": "Lighting",
+    "location": "Oakwood Drive",
+    "date": "2026-04-02T19:15:00Z",
+    "status": "in-progress"
+  },
+  {
+    "complaint_text": "Water pipe burst, flooding the sidewalk.",
+    "category": "Water",
+    "location": "22nd Street near the central park",
+    "date": "2026-04-03T06:45:00Z",
+    "status": "resolved"
+  },
+  {
+    "complaint_text": "Garbage has not been collected for three consecutive days.",
+    "category": "Sanitation",
+    "location": "Sunset Boulevard Residential Area",
+    "date": "2026-04-04T10:00:00Z",
+    "status": "pending"
+  },
+  {
+    "complaint_text": "Fallen tree branch blocking the pedestrian walkway.",
+    "category": "Parks & Trees",
+    "location": "Riverfront Walkway",
+    "date": "2026-04-04T14:20:00Z",
+    "status": "resolved"
+  },
+  {
+    "complaint_text": "Traffic light at the intersection is stuck on red.",
+    "category": "Traffic",
+    "location": "Northway & Elm Street",
+    "date": "2026-04-05T07:10:00Z",
+    "status": "in-progress"
+  },
+  {
+    "complaint_text": "Uncovered manhole - serious safety hazard.",
+    "category": "Roads",
+    "location": "Industrial Park Section B",
+    "date": "2026-04-05T09:40:00Z",
+    "status": "pending"
+  },
+  {
+    "complaint_text": "Overgrown weeds obstructing the stop sign visibility.",
+    "category": "Parks & Trees",
+    "location": "Maple & 3rd Street",
+    "date": "2026-04-06T11:00:00Z",
+    "status": "pending"
+  },
+  {
+    "complaint_text": "Severe waterlogging due to blocked storm drain.",
+    "category": "Sanitation",
+    "location": "Lower Downtown Market",
+    "date": "2026-04-06T15:30:00Z",
+    "status": "in-progress"
+  },
+  {
+    "complaint_text": "Stray dogs acting aggressively near the school.",
+    "category": "Animal Control",
+    "location": "Washington High School District",
+    "date": "2026-04-07T08:00:00Z",
+    "status": "pending"
+  },
+  {
+    "complaint_text": "Loud construction noise past midnight violating zoning laws.",
+    "category": "Noise",
+    "location": "Westside Apartment Complex",
+    "date": "2026-03-29T01:15:00Z",
+    "status": "resolved"
+  },
+  {
+    "complaint_text": "Faded zebra crossing lines putting pedestrians at risk.",
+    "category": "Roads",
+    "location": "City Center Mall Crossing",
+    "date": "2026-03-31T14:50:00Z",
+    "status": "pending"
+  }
+]
