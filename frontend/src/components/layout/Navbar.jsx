@@ -1,9 +1,10 @@
 import { useNavigate } from 'react-router-dom'
 import { getSession, logoutUser } from '../../services/auth.js'
 
-function Navbar() {
+function Navbar({ searchQuery, onSearchQueryChange, onToggleSidebar }) {
   const navigate = useNavigate()
   const session = getSession()
+  const latestNotifications = 3
 
   function handleLogout() {
     logoutUser()
@@ -13,26 +14,37 @@ function Navbar() {
   return (
     <header className="topbar">
       <div className="topbar__brand-wrap">
+        <button className="topbar__menu-btn" type="button" onClick={onToggleSidebar} aria-label="Toggle sidebar">
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M4 5.5h12M4 10h12M4 14.5h12" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+          </svg>
+        </button>
         <div className="topbar__brand-avatar" aria-hidden="true">
           A
         </div>
         <div>
           <h1 className="topbar__brand">Argus</h1>
-          <p className="topbar__brand-subtitle">
-            {session?.user?.role === 'admin' ? 'Admin complaint management' : 'Citizen complaint tracking'}
-          </p>
+          <p className="topbar__brand-subtitle">Citizen complaint tracking</p>
         </div>
       </div>
 
-      <div className="topbar__actions">
+      <div className="topbar__center">
         <label className="topbar__search" htmlFor="complaints-search">
           <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
             <path d="M14 14L18 18" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
             <circle cx="9" cy="9" r="5.5" stroke="currentColor" strokeWidth="1.7" />
           </svg>
-          <input id="complaints-search" type="search" placeholder="Search complaints..." />
+          <input
+            id="complaints-search"
+            type="search"
+            placeholder="Search complaints..."
+            value={searchQuery}
+            onChange={(event) => onSearchQueryChange(event.target.value)}
+          />
         </label>
+      </div>
 
+      <div className="topbar__actions">
         <button className="topbar__icon-btn" type="button" aria-label="Notifications">
           <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
             <path
@@ -43,25 +55,32 @@ function Navbar() {
             />
             <path d="M8.2 15.2a2 2 0 003.6 0" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
           </svg>
-          <span className="topbar__dot" aria-hidden="true" />
+          <span className="topbar__badge">{latestNotifications}</span>
         </button>
 
-        <div className="topbar__user">
-          <div className="topbar__avatar" aria-hidden="true">
-            <svg viewBox="0 0 20 20" fill="none">
-              <circle cx="10" cy="7" r="2.7" stroke="currentColor" strokeWidth="1.5" />
-              <path d="M4.8 16c1.05-2.2 2.9-3.3 5.2-3.3s4.15 1.1 5.2 3.3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-            </svg>
-          </div>
-          <div>
-            <span className="topbar__user-label">{session?.user?.name ?? 'User'}</span>
-            <p className="topbar__user-subtitle">{session?.user?.role === 'admin' ? 'City operations' : 'Citizen account'}</p>
-          </div>
-        </div>
+        <details className="topbar__profile">
+          <summary className="topbar__profile-summary">
+            <div className="topbar__avatar" aria-hidden="true">
+              <svg viewBox="0 0 20 20" fill="none">
+                <circle cx="10" cy="7" r="2.7" stroke="currentColor" strokeWidth="1.5" />
+                <path d="M4.8 16c1.05-2.2 2.9-3.3 5.2-3.3s4.15 1.1 5.2 3.3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+            </div>
+            <div>
+              <span className="topbar__user-label">{session?.user?.name ?? 'test'}</span>
+              <p className="topbar__user-subtitle">Citizen account</p>
+            </div>
+          </summary>
 
-        <button className="topbar__logout-btn" type="button" onClick={handleLogout}>
-          Logout
-        </button>
+          <div className="topbar__profile-menu">
+            <button type="button" onClick={() => navigate('/citizen/dashboard')}>
+              Account Settings
+            </button>
+            <button type="button" onClick={handleLogout}>
+              Logout
+            </button>
+          </div>
+        </details>
       </div>
     </header>
   )

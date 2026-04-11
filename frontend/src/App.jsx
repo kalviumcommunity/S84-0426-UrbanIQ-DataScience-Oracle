@@ -2,8 +2,12 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import AuthGate from './components/layout/AuthGate.jsx'
 import Layout from './components/layout/Layout.jsx'
 import PublicOnlyGate from './components/layout/PublicOnlyGate.jsx'
+import AdminAnalytics from './pages/AdminAnalytics.jsx'
+import AdminOverview from './pages/AdminOverview.jsx'
+import AdminTeamManagement from './pages/AdminTeamManagement.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 import Complaints from './pages/Complaints.jsx'
+import HowItWorks from './pages/HowItWorks.jsx'
 import GetStarted from './pages/GetStarted.jsx'
 import Login from './pages/Login.jsx'
 import Signup from './pages/Signup.jsx'
@@ -21,8 +25,12 @@ function App() {
 
       <Route element={<AuthGate allowedRoles={["admin"]} />}>
         <Route element={<Layout />}>
-          <Route path="admin" element={<Navigate to="/admin/dashboard" replace />} />
-          <Route path="admin/dashboard" element={<Dashboard />} />
+          <Route path="admin" element={<Navigate to="/admin/overview" replace />} />
+          <Route path="admin/dashboard" element={<Navigate to="/admin/overview" replace />} />
+          <Route path="admin/overview" element={<AdminOverview />} />
+          <Route path="admin/work-queue" element={<Dashboard />} />
+          <Route path="admin/analytics" element={<AdminAnalytics />} />
+          <Route path="admin/team-management" element={<AdminTeamManagement />} />
         </Route>
       </Route>
 
@@ -30,6 +38,7 @@ function App() {
         <Route element={<Layout />}>
           <Route path="citizen" element={<Navigate to="/citizen/dashboard" replace />} />
           <Route path="citizen/dashboard" element={<Complaints />} />
+          <Route path="citizen/how-it-works" element={<HowItWorks />} />
         </Route>
       </Route>
 

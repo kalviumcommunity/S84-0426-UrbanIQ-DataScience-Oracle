@@ -115,17 +115,70 @@ function persistComplaints(complaints) {
 }
 
 function normalizeComplaint(complaint) {
+  const createdAt = complaint.createdAt ?? new Date().toISOString()
+  const status = complaint.status ?? 'pending'
+  const statusHistory =
+    Array.isArray(complaint.statusHistory) && complaint.statusHistory.length
+      ? complaint.statusHistory
+      : buildDefaultStatusHistory({
+          createdAt,
+          resolvedAt: complaint.resolvedAt,
+          status,
+        })
+
   return {
     id: complaint.id,
     title: complaint.title,
     category: complaint.category,
     area: complaint.area,
+    location: complaint.location ?? complaint.area,
     details: complaint.details,
     submittedBy: complaint.submittedBy,
-    createdAt: complaint.createdAt,
+    createdAt,
     resolvedAt: complaint.resolvedAt ?? null,
-    status: complaint.status ?? 'pending',
+    status,
+    priority: complaint.priority ?? 'medium',
+    assignedTo: complaint.assignedTo ?? 'Unassigned',
+    imageUrl: complaint.imageUrl ?? null,
+    statusHistory,
   }
+}
+
+function buildDefaultStatusHistory({ createdAt, resolvedAt, status }) {
+  const history = [
+    { stage: 'submitted', at: createdAt },
+    { stage: 'under-review', at: createdAt },
+  ]
+
+  if (status === 'in-progress' || status === 'resolved') {
+    history.push({ stage: 'in-progress', at: createdAt })
+  }
+
+  if (status === 'resolved') {
+    history.push({ stage: 'resolved', at: resolvedAt ?? new Date().toISOString() })
+  }
+
+  return history
+}
+
+function ensureStatusHistory(complaint) {
+  if (Array.isArray(complaint.statusHistory) && complaint.statusHistory.length) {
+    return complaint.statusHistory
+  }
+
+  return buildDefaultStatusHistory({
+    createdAt: complaint.createdAt,
+    resolvedAt: complaint.resolvedAt,
+    status: complaint.status,
+  })
+}
+
+function addHistoryEntry(history, stage, at) {
+  if (history.some((entry) => entry.stage === stage)) {
+    return history
+  }
+
+  return [...history, { stage, at }]
 }
 
 function getComplaintMetrics(complaints) {
@@ -213,15 +266,24 @@ export function fetchComplaintsList() {
 
 export function createComplaint(payload) {
   const complaints = ensureLocalStore()
+  const createdAt = new Date().toISOString()
   const complaint = normalizeComplaint({
     id: `cmp-${Date.now()}`,
     title: payload.title.trim(),
     category: payload.category.trim(),
     area: payload.area.trim(),
+    location: payload.location?.trim() || payload.area.trim(),
     details: payload.details.trim(),
     submittedBy: payload.submittedBy.trim(),
-    createdAt: new Date().toISOString(),
+    createdAt,
     status: 'pending',
+    priority: payload.priority ?? 'medium',
+    assignedTo: payload.assignedTo ?? 'Unassigned',
+    imageUrl: payload.imageUrl ?? null,
+    statusHistory: [
+      { stage: 'submitted', at: createdAt },
+      { stage: 'under-review', at: createdAt },
+    ],
   })
 
   const nextComplaints = [complaint, ...complaints]
@@ -232,12 +294,18 @@ export function createComplaint(payload) {
 
 export function resolveComplaint(complaintId) {
   const complaints = ensureLocalStore()
+  const resolvedAt = new Date().toISOString()
   const nextComplaints = complaints.map((complaint) =>
     complaint.id === complaintId
       ? {
           ...complaint,
           status: 'resolved',
-          resolvedAt: new Date().toISOString(),
+          resolvedAt,
+          statusHistory: addHistoryEntry(
+            addHistoryEntry(ensureStatusHistory(complaint), 'in-progress', resolvedAt),
+            'resolved',
+            resolvedAt,
+          ),
         }
       : complaint,
   )
@@ -256,6 +324,51 @@ export function removeComplaint(complaintId) {
   persistComplaints(nextComplaints)
 
   return Promise.resolve({ success: true, id: complaintId })
+}
+
+export function assignComplaint(complaintId, assignee) {
+  const complaints = ensureLocalStore()
+  const nextComplaints = complaints.map((complaint) =>
+    complaint.id === complaintId
+      ? {
+          ...complaint,
+          assignedTo: assignee,
+        }
+      : complaint,
+  )
+
+  persistComplaints(nextComplaints)
+
+  return Promise.resolve({
+    data: nextComplaints.find((complaint) => complaint.id === complaintId) ?? null,
+  })
+}
+
+export function markAllPendingAsReviewed() {
+  const complaints = ensureLocalStore()
+  const reviewedAt = new Date().toISOString()
+  let updatedCount = 0
+
+  const nextComplaints = complaints.map((complaint) => {
+    if (complaint.status !== 'pending') {
+      return complaint
+    }
+
+    updatedCount += 1
+    return {
+      ...complaint,
+      status: 'in-progress',
+      statusHistory: addHistoryEntry(ensureStatusHistory(complaint), 'in-progress', reviewedAt),
+    }
+  })
+
+  persistComplaints(nextComplaints)
+
+  return Promise.resolve({
+    data: {
+      updatedCount,
+    },
+  })
 }
 
 export function fetchComplaintStore() {
