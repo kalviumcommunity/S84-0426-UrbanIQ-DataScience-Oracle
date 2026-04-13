@@ -9,6 +9,7 @@ function Login() {
   const [searchParams] = useSearchParams()
   const [role, setRole] = useState(searchParams.get('role') === 'admin' ? 'admin' : 'citizen')
   const [formData, setFormData] = useState({ email: '', password: '' })
+  const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
 
   function handleChange(event) {
@@ -67,7 +68,39 @@ function Login() {
 
             <label>
               Password
-              <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="Enter your password" required />
+              <div className="auth-password-field">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Enter your password"
+                  required
+                />
+                <button
+                  type="button"
+                  className="auth-password-toggle"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  aria-pressed={showPassword}
+                  onClick={() => setShowPassword((currentValue) => !currentValue)}
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    {showPassword ? (
+                      <>
+                        <path d="M3 3l18 18" />
+                        <path d="M10.58 10.58A2 2 0 0012 14a2 2 0 001.42-.58" />
+                        <path d="M9.88 5.09A9.77 9.77 0 0112 4c5.23 0 9.27 3.11 10.5 8-1 3.38-3.32 5.86-6.37 7.1" />
+                        <path d="M6.61 6.61C4.58 8.02 3.08 9.93 1.5 12c.75 2.96 2.84 5.73 5.73 7.28" />
+                      </>
+                    ) : (
+                      <>
+                        <path d="M1.5 12C2.73 7.11 6.77 4 12 4s9.27 3.11 10.5 8c-1.23 4.89-5.27 8-10.5 8S2.73 16.89 1.5 12z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </>
+                    )}
+                  </svg>
+                </button>
+              </div>
             </label>
 
             {error ? <p className="auth-form__error">{error}</p> : null}
