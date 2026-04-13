@@ -53,3 +53,20 @@ Instead of just storing complaints as dead text, our system analyzes patterns to
 ## 💡 Tagline
 
 > *"A smart city isn't built on sensors and concrete alone; it is built by listening to the voices of its people—and having the wisdom to act."*
+
+## 🔐 UX Enhancement — Show Password Option
+
+To improve usability and reduce login friction, Argus includes a “Show Password” toggle in authentication forms.
+
+✨ Why It Matters
+👁️ Improves accuracy by letting users verify their input
+🔐 Reduces login failures caused by mistyped passwords
+⚡ Enhances user experience without compromising security
+⚙️ How It Works
+A simple toggle (eye icon 👁️) is provided inside the password field
+When enabled, the password becomes visible in plain text
+When disabled, it reverts to masked (••••••••) format
+## 🛡️ Security Considerations
+Password is only visible on the user’s screen
+Automatically re-masks when the field loses focus (optional enhancement)
+Works entirely on the client-side—no sensitive data exposure
