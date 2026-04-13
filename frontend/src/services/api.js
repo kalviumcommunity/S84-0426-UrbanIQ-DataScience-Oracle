@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1',
 })
 
 const STORAGE_KEY = 'urbaniq-complaints'
@@ -245,134 +245,47 @@ function groupByCategory(complaints) {
 }
 
 export function fetchDashboardData() {
-  const complaints = ensureLocalStore().map(normalizeComplaint)
-  const metrics = getComplaintMetrics(complaints)
-
-  return Promise.resolve({
-    data: {
-      metrics,
-      monthlyTrend: groupByMonth(complaints),
-      categoryBreakdown: groupByCategory(complaints),
-      allComplaints: complaints,
-      recentComplaints: complaints.slice(0, 6),
-    },
-  })
+  return api.get('/dashboard')
 }
 
-export function fetchComplaintsList() {
-  const complaints = ensureLocalStore().map(normalizeComplaint)
-  return Promise.resolve({ data: complaints })
+export async function fetchComplaintsList() {
+  const response = await api.get('/complaints')
+  return { data: response.data?.data ?? [] }
 }
 
 export function createComplaint(payload) {
-  const complaints = ensureLocalStore()
-  const createdAt = new Date().toISOString()
-  const complaint = normalizeComplaint({
-    id: `cmp-${Date.now()}`,
-    title: payload.title.trim(),
-    category: payload.category.trim(),
-    area: payload.area.trim(),
-    location: payload.location?.trim() || payload.area.trim(),
-    details: payload.details.trim(),
-    submittedBy: payload.submittedBy.trim(),
-    createdAt,
-    status: 'pending',
+  return api.post('/complaints', {
+    title: payload.title,
+    category: payload.category,
+    area: payload.area,
+    location: payload.location,
+    details: payload.details,
+    submittedBy: payload.submittedBy,
     priority: payload.priority ?? 'medium',
     assignedTo: payload.assignedTo ?? 'Unassigned',
     imageUrl: payload.imageUrl ?? null,
-    statusHistory: [
-      { stage: 'submitted', at: createdAt },
-      { stage: 'under-review', at: createdAt },
-    ],
   })
-
-  const nextComplaints = [complaint, ...complaints]
-  persistComplaints(nextComplaints)
-
-  return Promise.resolve({ data: complaint })
 }
 
 export function resolveComplaint(complaintId) {
-  const complaints = ensureLocalStore()
-  const resolvedAt = new Date().toISOString()
-  const nextComplaints = complaints.map((complaint) =>
-    complaint.id === complaintId
-      ? {
-          ...complaint,
-          status: 'resolved',
-          resolvedAt,
-          statusHistory: addHistoryEntry(
-            addHistoryEntry(ensureStatusHistory(complaint), 'in-progress', resolvedAt),
-            'resolved',
-            resolvedAt,
-          ),
-        }
-      : complaint,
-  )
-
-  persistComplaints(nextComplaints)
-
-  return Promise.resolve({
-    data: nextComplaints.find((complaint) => complaint.id === complaintId) ?? null,
-  })
+  return api.patch(`/complaints/${complaintId}/resolve`)
 }
 
 export function removeComplaint(complaintId) {
-  const complaints = ensureLocalStore()
-  const nextComplaints = complaints.filter((complaint) => complaint.id !== complaintId)
-
-  persistComplaints(nextComplaints)
-
-  return Promise.resolve({ success: true, id: complaintId })
+  return api.delete(`/complaints/${complaintId}`)
 }
 
 export function assignComplaint(complaintId, assignee) {
-  const complaints = ensureLocalStore()
-  const nextComplaints = complaints.map((complaint) =>
-    complaint.id === complaintId
-      ? {
-          ...complaint,
-          assignedTo: assignee,
-        }
-      : complaint,
-  )
-
-  persistComplaints(nextComplaints)
-
-  return Promise.resolve({
-    data: nextComplaints.find((complaint) => complaint.id === complaintId) ?? null,
-  })
+  return api.patch(`/complaints/${complaintId}/assign`, { assignedTo: assignee })
 }
 
 export function markAllPendingAsReviewed() {
-  const complaints = ensureLocalStore()
-  const reviewedAt = new Date().toISOString()
-  let updatedCount = 0
-
-  const nextComplaints = complaints.map((complaint) => {
-    if (complaint.status !== 'pending') {
-      return complaint
-    }
-
-    updatedCount += 1
-    return {
-      ...complaint,
-      status: 'in-progress',
-      statusHistory: addHistoryEntry(ensureStatusHistory(complaint), 'in-progress', reviewedAt),
-    }
-  })
-
-  persistComplaints(nextComplaints)
-
-  return Promise.resolve({
-    data: {
-      updatedCount,
-    },
-  })
+  return api.patch('/complaints/actions/review-pending')
 }
 
-export function fetchComplaintStore() {
-  return Promise.resolve({ data: ensureLocalStore().map(normalizeComplaint) })
+export async function fetchComplaintStore() {
+  const response = await api.get('/complaints')
+  return { data: response.data?.data ?? [] }
 }
 
 export default api
