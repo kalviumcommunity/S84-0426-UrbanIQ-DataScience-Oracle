@@ -20,14 +20,16 @@ function Login() {
     }))
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
 
     try {
-      const session = loginUser({ ...formData, role })
+      setError('')
+      const session = await loginUser(formData)
       navigate(getDefaultRouteForRole(session.user.role), { replace: true })
     } catch (loginError) {
-      setError(loginError.message)
+      console.error('Login request failed:', loginError)
+      setError(loginError.message || 'Unable to log in right now. Please try again.')
     }
   }
 
