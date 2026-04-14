@@ -40,7 +40,9 @@ async def global_exception_handler(request: Request, exc: Exception):
 
 # Import and include routers
 from routes.insights import router as insights_router
+from routes.auth import router as auth_router
 app.include_router(insights_router, prefix="/api/v1")
+app.include_router(auth_router, prefix="/api/v1")
 
 # Test route to verify server is running
 @app.get("/")

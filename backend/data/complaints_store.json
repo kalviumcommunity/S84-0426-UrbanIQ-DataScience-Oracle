@@ -1,5 +1,63 @@
 [
   {
+    "id": "cmp-1776164733495",
+    "title": "Deployed URL integration check",
+    "category": "Other",
+    "area": "Ward 6",
+    "location": "Integration Lane",
+    "details": "Created during full flow verification.",
+    "submittedBy": "API Test User",
+    "createdAt": "2026-04-14T11:05:33.495827Z",
+    "resolvedAt": "2026-04-14T11:05:33.531841Z",
+    "status": "resolved",
+    "priority": "medium",
+    "assignedTo": "Unassigned",
+    "imageUrl": null,
+    "statusHistory": [
+      {
+        "stage": "submitted",
+        "at": "2026-04-14T11:05:33.495827Z"
+      },
+      {
+        "stage": "under-review",
+        "at": "2026-04-14T11:05:33.495827Z"
+      },
+      {
+        "stage": "in-progress",
+        "at": "2026-04-14T11:05:33.531841Z"
+      },
+      {
+        "stage": "resolved",
+        "at": "2026-04-14T11:05:33.531841Z"
+      }
+    ]
+  },
+  {
+    "id": "cmp-1776163875804",
+    "title": "Frontend connectivity test",
+    "category": "Other",
+    "area": "Ward 1",
+    "location": "Test Lane",
+    "details": "Testing complaint submission from frontend flow.",
+    "submittedBy": "Copilot",
+    "createdAt": "2026-04-14T10:51:15.804897Z",
+    "resolvedAt": null,
+    "status": "pending",
+    "priority": "medium",
+    "assignedTo": "Unassigned",
+    "imageUrl": null,
+    "statusHistory": [
+      {
+        "stage": "submitted",
+        "at": "2026-04-14T10:51:15.804897Z"
+      },
+      {
+        "stage": "under-review",
+        "at": "2026-04-14T10:51:15.804897Z"
+      }
+    ]
+  },
+  {
     "id": "cmp-1001",
     "title": "Deep pothole causing traffic slowdowns and vehicle damage",
     "category": "Roads",
