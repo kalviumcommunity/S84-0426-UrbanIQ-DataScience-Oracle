@@ -22,7 +22,7 @@ function Signup() {
     }))
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
 
     if (!formData.name.trim()) {
@@ -41,14 +41,15 @@ function Signup() {
     }
 
     try {
-      const session = signupCitizen({
+      const session = await signupCitizen({
         name: formData.name,
         email: formData.email,
         password: formData.password,
       })
       navigate(getDefaultRouteForRole(session.user.role), { replace: true })
     } catch (signupError) {
-      setError(signupError.message)
+      console.error('Signup request failed:', signupError)
+      setError(signupError.message || 'Unable to create your account right now. Please try again.')
     }
   }
 
