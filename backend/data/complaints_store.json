@@ -1,0 +1,338 @@
+[
+  {
+    "id": "cmp-1001",
+    "title": "Deep pothole causing traffic slowdowns and vehicle damage",
+    "category": "Roads",
+    "area": "Main St intersection with 5th Ave",
+    "location": "Main St intersection with 5th Ave",
+    "details": "Deep pothole causing traffic slowdowns and vehicle damage.",
+    "submittedBy": "Citizen",
+    "createdAt": "2026-04-01T08:30:00Z",
+    "resolvedAt": null,
+    "status": "pending",
+    "priority": "medium",
+    "assignedTo": "Unassigned",
+    "imageUrl": null,
+    "statusHistory": [
+      {
+        "stage": "submitted",
+        "at": "2026-04-01T08:30:00Z"
+      },
+      {
+        "stage": "under-review",
+        "at": "2026-04-01T08:30:00Z"
+      }
+    ]
+  },
+  {
+    "id": "cmp-1002",
+    "title": "Streetlight has been out for over a week, making the sidewalk unsafe at night",
+    "category": "Lighting",
+    "area": "Oakwood Drive",
+    "location": "Oakwood Drive",
+    "details": "Streetlight has been out for over a week, making the sidewalk unsafe at night.",
+    "submittedBy": "Citizen",
+    "createdAt": "2026-04-02T19:15:00Z",
+    "resolvedAt": null,
+    "status": "in-progress",
+    "priority": "medium",
+    "assignedTo": "Unassigned",
+    "imageUrl": null,
+    "statusHistory": [
+      {
+        "stage": "submitted",
+        "at": "2026-04-02T19:15:00Z"
+      },
+      {
+        "stage": "under-review",
+        "at": "2026-04-02T19:15:00Z"
+      },
+      {
+        "stage": "in-progress",
+        "at": "2026-04-02T19:15:00Z"
+      }
+    ]
+  },
+  {
+    "id": "cmp-1003",
+    "title": "Water pipe burst, flooding the sidewalk",
+    "category": "Water",
+    "area": "22nd Street near the central park",
+    "location": "22nd Street near the central park",
+    "details": "Water pipe burst, flooding the sidewalk.",
+    "submittedBy": "Citizen",
+    "createdAt": "2026-04-03T06:45:00Z",
+    "resolvedAt": "2026-04-03T06:45:00Z",
+    "status": "resolved",
+    "priority": "medium",
+    "assignedTo": "Unassigned",
+    "imageUrl": null,
+    "statusHistory": [
+      {
+        "stage": "submitted",
+        "at": "2026-04-03T06:45:00Z"
+      },
+      {
+        "stage": "under-review",
+        "at": "2026-04-03T06:45:00Z"
+      },
+      {
+        "stage": "in-progress",
+        "at": "2026-04-03T06:45:00Z"
+      },
+      {
+        "stage": "resolved",
+        "at": "2026-04-03T06:45:00Z"
+      }
+    ]
+  },
+  {
+    "id": "cmp-1004",
+    "title": "Garbage has not been collected for three consecutive days",
+    "category": "Sanitation",
+    "area": "Sunset Boulevard Residential Area",
+    "location": "Sunset Boulevard Residential Area",
+    "details": "Garbage has not been collected for three consecutive days.",
+    "submittedBy": "Citizen",
+    "createdAt": "2026-04-04T10:00:00Z",
+    "resolvedAt": null,
+    "status": "pending",
+    "priority": "medium",
+    "assignedTo": "Unassigned",
+    "imageUrl": null,
+    "statusHistory": [
+      {
+        "stage": "submitted",
+        "at": "2026-04-04T10:00:00Z"
+      },
+      {
+        "stage": "under-review",
+        "at": "2026-04-04T10:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "cmp-1005",
+    "title": "Fallen tree branch blocking the pedestrian walkway",
+    "category": "Parks & Trees",
+    "area": "Riverfront Walkway",
+    "location": "Riverfront Walkway",
+    "details": "Fallen tree branch blocking the pedestrian walkway.",
+    "submittedBy": "Citizen",
+    "createdAt": "2026-04-04T14:20:00Z",
+    "resolvedAt": "2026-04-04T14:20:00Z",
+    "status": "resolved",
+    "priority": "medium",
+    "assignedTo": "Unassigned",
+    "imageUrl": null,
+    "statusHistory": [
+      {
+        "stage": "submitted",
+        "at": "2026-04-04T14:20:00Z"
+      },
+      {
+        "stage": "under-review",
+        "at": "2026-04-04T14:20:00Z"
+      },
+      {
+        "stage": "in-progress",
+        "at": "2026-04-04T14:20:00Z"
+      },
+      {
+        "stage": "resolved",
+        "at": "2026-04-04T14:20:00Z"
+      }
+    ]
+  },
+  {
+    "id": "cmp-1006",
+    "title": "Traffic light at the intersection is stuck on red",
+    "category": "Traffic",
+    "area": "Northway & Elm Street",
+    "location": "Northway & Elm Street",
+    "details": "Traffic light at the intersection is stuck on red.",
+    "submittedBy": "Citizen",
+    "createdAt": "2026-04-05T07:10:00Z",
+    "resolvedAt": null,
+    "status": "in-progress",
+    "priority": "medium",
+    "assignedTo": "Unassigned",
+    "imageUrl": null,
+    "statusHistory": [
+      {
+        "stage": "submitted",
+        "at": "2026-04-05T07:10:00Z"
+      },
+      {
+        "stage": "under-review",
+        "at": "2026-04-05T07:10:00Z"
+      },
+      {
+        "stage": "in-progress",
+        "at": "2026-04-05T07:10:00Z"
+      }
+    ]
+  },
+  {
+    "id": "cmp-1007",
+    "title": "Uncovered manhole - serious safety hazard",
+    "category": "Roads",
+    "area": "Industrial Park Section B",
+    "location": "Industrial Park Section B",
+    "details": "Uncovered manhole - serious safety hazard.",
+    "submittedBy": "Citizen",
+    "createdAt": "2026-04-05T09:40:00Z",
+    "resolvedAt": null,
+    "status": "pending",
+    "priority": "medium",
+    "assignedTo": "Unassigned",
+    "imageUrl": null,
+    "statusHistory": [
+      {
+        "stage": "submitted",
+        "at": "2026-04-05T09:40:00Z"
+      },
+      {
+        "stage": "under-review",
+        "at": "2026-04-05T09:40:00Z"
+      }
+    ]
+  },
+  {
+    "id": "cmp-1008",
+    "title": "Overgrown weeds obstructing the stop sign visibility",
+    "category": "Parks & Trees",
+    "area": "Maple & 3rd Street",
+    "location": "Maple & 3rd Street",
+    "details": "Overgrown weeds obstructing the stop sign visibility.",
+    "submittedBy": "Citizen",
+    "createdAt": "2026-04-06T11:00:00Z",
+    "resolvedAt": null,
+    "status": "pending",
+    "priority": "medium",
+    "assignedTo": "Unassigned",
+    "imageUrl": null,
+    "statusHistory": [
+      {
+        "stage": "submitted",
+        "at": "2026-04-06T11:00:00Z"
+      },
+      {
+        "stage": "under-review",
+        "at": "2026-04-06T11:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "cmp-1009",
+    "title": "Severe waterlogging due to blocked storm drain",
+    "category": "Sanitation",
+    "area": "Lower Downtown Market",
+    "location": "Lower Downtown Market",
+    "details": "Severe waterlogging due to blocked storm drain.",
+    "submittedBy": "Citizen",
+    "createdAt": "2026-04-06T15:30:00Z",
+    "resolvedAt": null,
+    "status": "in-progress",
+    "priority": "medium",
+    "assignedTo": "Unassigned",
+    "imageUrl": null,
+    "statusHistory": [
+      {
+        "stage": "submitted",
+        "at": "2026-04-06T15:30:00Z"
+      },
+      {
+        "stage": "under-review",
+        "at": "2026-04-06T15:30:00Z"
+      },
+      {
+        "stage": "in-progress",
+        "at": "2026-04-06T15:30:00Z"
+      }
+    ]
+  },
+  {
+    "id": "cmp-1010",
+    "title": "Stray dogs acting aggressively near the school",
+    "category": "Animal Control",
+    "area": "Washington High School District",
+    "location": "Washington High School District",
+    "details": "Stray dogs acting aggressively near the school.",
+    "submittedBy": "Citizen",
+    "createdAt": "2026-04-07T08:00:00Z",
+    "resolvedAt": null,
+    "status": "pending",
+    "priority": "medium",
+    "assignedTo": "Unassigned",
+    "imageUrl": null,
+    "statusHistory": [
+      {
+        "stage": "submitted",
+        "at": "2026-04-07T08:00:00Z"
+      },
+      {
+        "stage": "under-review",
+        "at": "2026-04-07T08:00:00Z"
+      }
+    ]
+  },
+  {
+    "id": "cmp-1011",
+    "title": "Loud construction noise past midnight violating zoning laws",
+    "category": "Noise",
+    "area": "Westside Apartment Complex",
+    "location": "Westside Apartment Complex",
+    "details": "Loud construction noise past midnight violating zoning laws.",
+    "submittedBy": "Citizen",
+    "createdAt": "2026-03-29T01:15:00Z",
+    "resolvedAt": "2026-03-29T01:15:00Z",
+    "status": "resolved",
+    "priority": "medium",
+    "assignedTo": "Unassigned",
+    "imageUrl": null,
+    "statusHistory": [
+      {
+        "stage": "submitted",
+        "at": "2026-03-29T01:15:00Z"
+      },
+      {
+        "stage": "under-review",
+        "at": "2026-03-29T01:15:00Z"
+      },
+      {
+        "stage": "in-progress",
+        "at": "2026-03-29T01:15:00Z"
+      },
+      {
+        "stage": "resolved",
+        "at": "2026-03-29T01:15:00Z"
+      }
+    ]
+  },
+  {
+    "id": "cmp-1012",
+    "title": "Faded zebra crossing lines putting pedestrians at risk",
+    "category": "Roads",
+    "area": "City Center Mall Crossing",
+    "location": "City Center Mall Crossing",
+    "details": "Faded zebra crossing lines putting pedestrians at risk.",
+    "submittedBy": "Citizen",
+    "createdAt": "2026-03-31T14:50:00Z",
+    "resolvedAt": null,
+    "status": "pending",
+    "priority": "medium",
+    "assignedTo": "Unassigned",
+    "imageUrl": null,
+    "statusHistory": [
+      {
+        "stage": "submitted",
+        "at": "2026-03-31T14:50:00Z"
+      },
+      {
+        "stage": "under-review",
+        "at": "2026-03-31T14:50:00Z"
+      }
+    ]
+  }
+]
