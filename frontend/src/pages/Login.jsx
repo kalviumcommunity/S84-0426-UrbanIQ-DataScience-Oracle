@@ -54,14 +54,6 @@ function Login() {
             </button>
           </div>
 
-          {role === 'admin' ? (
-            <div className="auth-callout">
-              <strong>Admin credentials</strong>
-              <p>Email: admin@gmail.com</p>
-              <p>Password: admin123</p>
-            </div>
-          ) : null}
-
           <form className="auth-form" onSubmit={handleSubmit}>
             <label>
               Email

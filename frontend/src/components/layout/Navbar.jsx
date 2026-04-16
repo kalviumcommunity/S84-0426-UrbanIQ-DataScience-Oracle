@@ -68,12 +68,12 @@ function Navbar({ searchQuery, onSearchQueryChange, onToggleSidebar }) {
             </div>
             <div>
               <span className="topbar__user-label">{session?.user?.name ?? 'test'}</span>
-              <p className="topbar__user-subtitle">Citizen account</p>
+              <p className="topbar__user-subtitle">{session?.user?.role === 'admin' ? 'Admin account' : 'Citizen account'}</p>
             </div>
           </summary>
 
           <div className="topbar__profile-menu">
-            <button type="button" onClick={() => navigate('/citizen/dashboard')}>
+            <button type="button" onClick={() => navigate(session?.user?.role === 'admin' ? '/admin/overview' : '/citizen/dashboard')}>
               Account Settings
             </button>
             <button type="button" onClick={handleLogout}>
