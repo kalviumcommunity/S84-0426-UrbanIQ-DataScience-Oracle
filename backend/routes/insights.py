@@ -227,6 +227,23 @@ def _insights_source_data() -> List[Dict[str, Any]]:
   ]
 
 
+def _insights_analysis_source_data() -> List[Dict[str, Any]]:
+  complaints = _read_complaints_store()
+  return [
+    {
+      'complaint_text': complaint.get('details') or complaint.get('title') or '',
+      'category': complaint.get('category'),
+      'area': complaint.get('area') or complaint.get('location'),
+      'location': complaint.get('location') or complaint.get('area'),
+      'date': complaint.get('createdAt'),
+      'createdAt': complaint.get('createdAt'),
+      'resolvedAt': complaint.get('resolvedAt'),
+      'status': complaint.get('status'),
+    }
+    for complaint in complaints
+  ]
+
+
 @router.get('/dashboard', tags=['Dashboard'])
 async def get_dashboard_data():
   complaints = _sorted_complaints_desc(_read_complaints_store())
@@ -480,11 +497,11 @@ async def get_trends(freq: str = 'D'):
         raise HTTPException(status_code=404, detail="No valid data available to analyze.")
 
       normalized_freq = (freq or 'D').upper()
-      if normalized_freq not in {'D', 'W'}:
-        raise HTTPException(status_code=400, detail="Invalid freq. Use 'D' for daily or 'W' for weekly.")
+      if normalized_freq not in {'D', 'W', 'M'}:
+        raise HTTPException(status_code=400, detail="Invalid freq. Use 'D' for daily, 'W' for weekly, or 'M' for monthly.")
 
       trends = get_time_based_trends(df, freq=normalized_freq)
-      label = 'daily' if normalized_freq == 'D' else 'weekly'
+      label = 'daily' if normalized_freq == 'D' else 'weekly' if normalized_freq == 'W' else 'monthly'
       return _success_response(
         f"{label.title()} trend generated successfully.",
         {"frequency": normalized_freq, "trends": trends},
@@ -500,7 +517,7 @@ async def get_summary():
     Get a complete summary report of all insights combined.
     """
     try:
-      data = get_dummy_data()
+      data = _insights_analysis_source_data()
       report = generate_full_report(data)
       return _success_response(
         "Insights summary generated successfully.",
