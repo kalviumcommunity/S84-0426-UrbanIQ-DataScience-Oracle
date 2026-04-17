@@ -292,4 +292,16 @@ export async function fetchComplaintStore() {
   return { data: response.data?.data ?? [] }
 }
 
+export async function predictComplaintCategory(text) {
+  const response = await api.post('/predict-category', {
+    complaint_text: text,
+  })
+  return response.data ?? {}
+}
+
+export async function fetchInsightsSummary() {
+  const response = await api.get('/insights/summary')
+  return response.data ?? {}
+}
+
 export default api

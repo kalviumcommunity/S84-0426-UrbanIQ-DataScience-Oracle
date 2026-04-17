@@ -3,7 +3,7 @@ import { useOutletContext } from 'react-router-dom'
 import Button from '../components/ui/Button.jsx'
 import Card from '../components/ui/Card.jsx'
 import Loader from '../components/ui/Loader.jsx'
-import { createComplaint, fetchComplaintsList } from '../services/api.js'
+import { createComplaint, fetchComplaintsList, predictComplaintCategory } from '../services/api.js'
 import './complaints.css'
 
 const initialForm = {
@@ -144,6 +144,7 @@ function Complaints() {
   const [showAdvanced, setShowAdvanced] = useState(false)
   const [showTimeline, setShowTimeline] = useState(false)
   const [isReportModalOpen, setIsReportModalOpen] = useState(false)
+  const [hasManualCategorySelection, setHasManualCategorySelection] = useState(false)
 
   const loadComplaints = async () => {
     try {
@@ -186,6 +187,10 @@ function Complaints() {
   function handleChange(event) {
     const { name, value } = event.target
 
+    if (name === 'category') {
+      setHasManualCategorySelection(true)
+    }
+
     if (name === 'location') {
       const selectedLocation = locationOptions.find((option) => option.value === value)
 
@@ -202,6 +207,45 @@ function Complaints() {
       [name]: value,
     }))
   }
+
+  useEffect(() => {
+    if (hasManualCategorySelection) {
+      return
+    }
+
+    const detailsText = formData.details.trim()
+    if (detailsText.length < 12) {
+      return
+    }
+
+    const debounceTimer = window.setTimeout(async () => {
+      try {
+        const prediction = await predictComplaintCategory(detailsText)
+        const predictedCategory = prediction?.predicted_category ?? prediction?.category ?? ''
+
+        if (!predictedCategory || !categoryOptions.includes(predictedCategory)) {
+          return
+        }
+
+        setFormData((currentValue) => {
+          if (currentValue.details.trim() !== detailsText || hasManualCategorySelection) {
+            return currentValue
+          }
+
+          return {
+            ...currentValue,
+            category: predictedCategory,
+          }
+        })
+      } catch {
+        // Keep current form behavior if prediction fails.
+      }
+    }, 500)
+
+    return () => {
+      window.clearTimeout(debounceTimer)
+    }
+  }, [formData.details, hasManualCategorySelection])
 
   function handleImageChange(event) {
     const file = event.target.files?.[0]
@@ -246,6 +290,7 @@ function Complaints() {
       setError('')
       await createComplaint(formData)
       setFormData(initialForm)
+      setHasManualCategorySelection(false)
       await loadComplaints()
       setSuccessMessage('Your complaint has been submitted and is visible to both users and admins.')
       setShowAdvanced(false)
