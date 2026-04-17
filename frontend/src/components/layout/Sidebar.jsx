@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom'
-import { getSession, logoutUser } from '../../services/auth.js'
+import { getProfileRouteForRole, getSession, logoutUser } from '../../services/auth.js'
 
 function getNavItems(role) {
   if (role === 'admin') {
@@ -62,6 +62,16 @@ function getNavItems(role) {
           </svg>
         ),
       },
+      {
+        label: 'Profile',
+        to: getProfileRouteForRole(role),
+        icon: (
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <circle cx="10" cy="7" r="2.7" stroke="currentColor" strokeWidth="1.5" />
+            <path d="M4.8 16c1.05-2.2 2.9-3.3 5.2-3.3s4.15 1.1 5.2 3.3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          </svg>
+        ),
+      },
     ]
   }
 
@@ -98,6 +108,16 @@ function getNavItems(role) {
             strokeLinejoin="round"
           />
           <path d="M8.2 15.2a2 2 0 003.6 0" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+        </svg>
+      ),
+    },
+    {
+      label: 'Profile',
+      to: getProfileRouteForRole(role),
+      icon: (
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <circle cx="10" cy="7" r="2.7" stroke="currentColor" strokeWidth="1.5" />
+          <path d="M4.8 16c1.05-2.2 2.9-3.3 5.2-3.3s4.15 1.1 5.2 3.3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
         </svg>
       ),
     },

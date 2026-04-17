@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { getSession, logoutUser } from '../../services/auth.js'
+import { getProfileRouteForRole, getSession, logoutUser } from '../../services/auth.js'
 
 function Navbar({ searchQuery, onSearchQueryChange, onToggleSidebar }) {
   const navigate = useNavigate()
@@ -78,8 +78,8 @@ function Navbar({ searchQuery, onSearchQueryChange, onToggleSidebar }) {
           </summary>
 
           <div className="topbar__profile-menu">
-            <button type="button" onClick={() => navigate(session?.user?.role === 'admin' ? '/admin/overview' : '/citizen/dashboard')}>
-              Account Settings
+            <button type="button" onClick={() => navigate(getProfileRouteForRole(session?.user?.role))}>
+              View profile
             </button>
             <button type="button" onClick={handleLogout}>
               Logout
