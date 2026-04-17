@@ -12,6 +12,11 @@ from services.data_analysis import (
     get_time_based_trends,
     generate_full_report
 )
+from services.category_predictor import (
+    predict_category,
+    is_predictor_ready,
+    get_trained_categories,
+)
 
 router = APIRouter()
 
@@ -30,6 +35,17 @@ class ComplaintCreateRequest(BaseModel):
 
 class AssignComplaintRequest(BaseModel):
   assignedTo: str = Field(..., min_length=1)
+
+
+class PredictCategoryRequest(BaseModel):
+  complaint_text: str = Field(..., min_length=1, description="Complaint text to classify")
+
+
+class PredictCategoryResponse(BaseModel):
+  predicted_category: Optional[str] = Field(None, description="Predicted category name")
+  confidence: Optional[float] = Field(None, description="Confidence score (0-1)")
+  all_scores: Optional[Dict[str, float]] = Field(None, description="Scores for all categories")
+  error: Optional[str] = Field(None, description="Error message if prediction failed")
 
 
 def _complaints_store_path() -> str:
@@ -527,3 +543,70 @@ async def get_summary():
       raise
     except Exception as exc:
       raise HTTPException(status_code=500, detail=f"Failed to generate summary: {str(exc)}")
+
+
+@router.post("/predict-category", tags=["ML Predictions"], response_model=PredictCategoryResponse)
+async def predict_complaint_category(payload: PredictCategoryRequest):
+    """
+    Predict complaint category based on complaint text using a trained ML model.
+    
+    Request body:
+    {
+      "complaint_text": "Deep pothole causing traffic slowdowns"
+    }
+    
+    Response:
+    {
+      "predicted_category": "Roads",
+      "confidence": 0.9245,
+      "all_scores": {
+        "Roads": 0.9245,
+        "Water": 0.0312,
+        ...
+      },
+      "error": null
+    }
+    """
+    try:
+      if not is_predictor_ready():
+        raise HTTPException(
+          status_code=503,
+          detail="Category predictor is not initialized. Please try again later.",
+        )
+
+      text = payload.complaint_text.strip()
+      if not text:
+        raise HTTPException(status_code=400, detail="complaint_text cannot be empty")
+
+      result = predict_category(text)
+      
+      if result.get('error'):
+        raise HTTPException(status_code=500, detail=result['error'])
+
+      return result
+    except HTTPException:
+      raise
+    except Exception as exc:
+      raise HTTPException(status_code=500, detail=f"Prediction failed: {str(exc)}")
+
+
+@router.get("/predict-category/info", tags=["ML Predictions"])
+async def get_predictor_info():
+    """
+    Get information about the trained category predictor.
+    Shows available categories and readiness status.
+    """
+    try:
+      categories = get_trained_categories()
+      ready = is_predictor_ready()
+      
+      return _success_response(
+        "Predictor information retrieved successfully.",
+        {
+          "is_ready": ready,
+          "trained_categories": categories,
+          "total_categories": len(categories),
+        },
+      )
+    except Exception as exc:
+      raise HTTPException(status_code=500, detail=f"Failed to get predictor info: {str(exc)}")

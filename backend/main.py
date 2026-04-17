@@ -4,12 +4,20 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from database.connection import connect_to_mongo, close_mongo_connection
 from config.settings import settings
+from services.category_predictor import initialize_predictor
+from routes.insights import _insights_analysis_source_data
 
 # Define the lifespan of the FastAPI app to manage startup and shutdown events
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # What happens on startup
     await connect_to_mongo()
+    # Initialize complaint category predictor with existing complaint data
+    try:
+        complaints_data = _insights_analysis_source_data()
+        initialize_predictor(complaints_data)
+    except Exception as e:
+        print(f"Warning: Failed to initialize category predictor: {e}")
     yield
     # What happens on shutdown
     await close_mongo_connection()
