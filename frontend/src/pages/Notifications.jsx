@@ -2,9 +2,10 @@ import { useEffect, useMemo, useState } from 'react'
 import Button from '../components/ui/Button.jsx'
 import Card from '../components/ui/Card.jsx'
 import Loader from '../components/ui/Loader.jsx'
-import { fetchNotifications } from '../services/api.js'
+import { fetchComplaintsList, fetchNotifications } from '../services/api.js'
 import { getSession } from '../services/auth.js'
 import {
+  buildNotificationsFromComplaints,
   getReadNotificationIds,
   markNotificationRead,
   markNotificationsRead,
@@ -48,8 +49,18 @@ function Notifications() {
     async function loadNotifications() {
       try {
         setLoading(true)
-        const response = await fetchNotifications(user?.role)
-        const list = response.data ?? []
+        let list = []
+
+        try {
+          const response = await fetchNotifications(user?.role)
+          list = response.data ?? []
+        } catch {
+          const complaintsResponse = await fetchComplaintsList()
+          list = buildNotificationsFromComplaints({
+            complaints: complaintsResponse.data ?? [],
+            role: user?.role,
+          })
+        }
 
         if (isMounted) {
           setNotifications(list)
