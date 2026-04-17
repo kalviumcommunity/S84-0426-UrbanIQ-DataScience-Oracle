@@ -89,6 +89,22 @@ export async function signupCitizen({ name, email, password }) {
   }
 }
 
+export async function updateProfile({ currentEmail, name, email, password }) {
+  try {
+    const response = await api.put('/auth/profile', {
+      current_email: currentEmail,
+      name,
+      email,
+      password,
+    })
+    const session = extractSessionData(response.data)
+    writeJson(SESSION_KEY, session)
+    return session
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, 'Unable to update your profile right now.'))
+  }
+}
+
 export function logoutUser() {
   if (typeof window !== 'undefined') {
     window.localStorage.removeItem(SESSION_KEY)

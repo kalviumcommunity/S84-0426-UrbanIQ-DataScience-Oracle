@@ -1,14 +1,25 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Button from '../components/ui/Button.jsx'
 import Card from '../components/ui/Card.jsx'
-import { getDefaultRouteForRole, getSession, logoutUser } from '../services/auth.js'
+import { getDefaultRouteForRole, getSession, logoutUser, updateProfile } from '../services/auth.js'
 import './profile.css'
 
 function Profile() {
   const navigate = useNavigate()
   const session = getSession()
   const user = session?.user ?? null
+  const [formData, setFormData] = useState({ name: '', email: '' })
+  const [isSaving, setIsSaving] = useState(false)
+  const [error, setError] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
+
+  useEffect(() => {
+    setFormData({
+      name: user?.name ?? '',
+      email: user?.email ?? '',
+    })
+  }, [user?.email, user?.name])
 
   const profileDetails = useMemo(() => {
     const role = user?.role ?? 'citizen'
@@ -28,6 +39,50 @@ function Profile() {
   function handleLogout() {
     logoutUser()
     navigate('/get-started', { replace: true })
+  }
+
+  function handleChange(event) {
+    const { name, value } = event.target
+    setFormData((currentValue) => ({
+      ...currentValue,
+      [name]: value,
+    }))
+    if (error) {
+      setError('')
+    }
+    if (successMessage) {
+      setSuccessMessage('')
+    }
+  }
+
+  async function handleSubmit(event) {
+    event.preventDefault()
+
+    if (!user?.email) {
+      setError('No active account was found for this session.')
+      return
+    }
+
+    try {
+      setIsSaving(true)
+      setError('')
+      setSuccessMessage('')
+      const sessionData = await updateProfile({
+        currentEmail: user.email,
+        name: formData.name.trim(),
+        email: formData.email.trim().toLowerCase(),
+      })
+
+      setFormData({
+        name: sessionData.user.name ?? '',
+        email: sessionData.user.email ?? '',
+      })
+      setSuccessMessage('Profile updated successfully.')
+    } catch (updateError) {
+      setError(updateError.message || 'Unable to update your profile right now.')
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   const initials = (user?.name ?? 'A')
@@ -85,27 +140,54 @@ function Profile() {
         <Card className="profile-page__card profile-page__card--accent">
           <div className="profile-page__section-header">
             <div>
-              <p className="profile-page__section-kicker">Session context</p>
-              <h2>What this profile controls</h2>
+              <p className="profile-page__section-kicker">Edit profile</p>
+              <h2>Update account details</h2>
             </div>
           </div>
 
-          <ul className="profile-page__bullets">
-            <li>The sidebar and top bar use this session to route you to the right workspace.</li>
-            <li>Your account role determines whether you land on admin or citizen pages.</li>
-            <li>Logging out clears the local session and returns you to the public landing page.</li>
-          </ul>
+          <form className="profile-page__form" onSubmit={handleSubmit}>
+            <label className="profile-page__field">
+              Full name
+              <input type="text" name="name" value={formData.name} onChange={handleChange} required />
+            </label>
 
-          <div className="profile-page__actions">
-            <Button className="profile-page__button" onClick={handleBack}>
-              Back to dashboard
-            </Button>
-            <Button className="profile-page__button profile-page__button--secondary" onClick={handleLogout}>
-              Log out
-            </Button>
-          </div>
+            <label className="profile-page__field">
+              Email address
+              <input type="email" name="email" value={formData.email} onChange={handleChange} required />
+            </label>
+
+            {error ? <p className="profile-page__message profile-page__message--error">{error}</p> : null}
+            {successMessage ? <p className="profile-page__message profile-page__message--success">{successMessage}</p> : null}
+
+            <div className="profile-page__actions">
+              <Button className="profile-page__button" type="submit" disabled={isSaving}>
+                {isSaving ? 'Saving...' : 'Save changes'}
+              </Button>
+              <Button className="profile-page__button profile-page__button--secondary" type="button" onClick={handleBack}>
+                Back to dashboard
+              </Button>
+              <Button className="profile-page__button profile-page__button--secondary" type="button" onClick={handleLogout}>
+                Log out
+              </Button>
+            </div>
+          </form>
         </Card>
       </div>
+
+      <Card className="profile-page__card profile-page__card--muted">
+        <div className="profile-page__section-header">
+          <div>
+            <p className="profile-page__section-kicker">Session context</p>
+            <h2>What this profile controls</h2>
+          </div>
+        </div>
+
+        <ul className="profile-page__bullets">
+          <li>The sidebar and top bar use this session to route you to the right workspace.</li>
+          <li>Your account role determines whether you land on admin or citizen pages.</li>
+          <li>Logging out clears the local session and returns you to the public landing page.</li>
+        </ul>
+      </Card>
     </div>
   )
 }
