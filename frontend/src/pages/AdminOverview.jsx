@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import Card from '../components/ui/Card.jsx'
 import Loader from '../components/ui/Loader.jsx'
-import { fetchDashboardData } from '../services/api.js'
+import { fetchDashboardData, fetchInsightsSummary } from '../services/api.js'
 import {
   filterByRange,
   getAlertInsights,
@@ -52,6 +52,29 @@ function AdminOverview() {
     }
 
     loadData()
+
+    async function loadEnhancedInsights() {
+      try {
+        const response = await fetchInsightsSummary()
+        const summary = response?.data ?? response ?? {}
+
+        const enhancedInsights = {
+          most_problematic_category: summary.most_problematic_category,
+          fastest_resolving_area: summary.fastest_resolving_area,
+          slowest_resolving_area: summary.slowest_resolving_area,
+          trend_direction: summary.trend_direction,
+          alerts: summary.alerts,
+          priority_areas: summary.priority_areas,
+          performance_flags: summary.performance_flags,
+        }
+
+        console.log('Enhanced insights summary:', enhancedInsights)
+      } catch {
+        // Keep existing overview behavior if enhanced insights are unavailable.
+      }
+    }
+
+    loadEnhancedInsights()
 
     return () => {
       isMounted = false
