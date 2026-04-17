@@ -45,7 +45,12 @@ function Navbar({ searchQuery, onSearchQueryChange, onToggleSidebar }) {
       </div>
 
       <div className="topbar__actions">
-        <button className="topbar__icon-btn" type="button" aria-label="Notifications">
+        <button
+          className="topbar__icon-btn"
+          type="button"
+          aria-label="Notifications"
+          onClick={() => navigate(session?.user?.role === 'admin' ? '/admin/notifications' : '/citizen/notifications')}
+        >
           <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
             <path
               d="M10 3.5a4 4 0 00-4 4v2.1c0 .62-.22 1.21-.62 1.69L4.25 12.6a.8.8 0 00.61 1.33h10.28a.8.8 0 00.61-1.33l-1.13-1.3A2.6 2.6 0 0114 9.6V7.5a4 4 0 00-4-4z"

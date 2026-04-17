@@ -47,6 +47,21 @@ function getNavItems(role) {
           </svg>
         ),
       },
+      {
+        label: 'Notifications',
+        to: '/admin/notifications',
+        icon: (
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path
+              d="M10 3.5a4 4 0 00-4 4v2.1c0 .62-.22 1.21-.62 1.69L4.25 12.6a.8.8 0 00.61 1.33h10.28a.8.8 0 00.61-1.33l-1.13-1.3A2.6 2.6 0 0114 9.6V7.5a4 4 0 00-4-4z"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinejoin="round"
+            />
+            <path d="M8.2 15.2a2 2 0 003.6 0" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          </svg>
+        ),
+      },
     ]
   }
 
@@ -68,6 +83,21 @@ function getNavItems(role) {
         <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
           <circle cx="10" cy="10" r="6.5" stroke="currentColor" strokeWidth="1.5" />
           <path d="M10 6.8v.2M10 9v4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+        </svg>
+      ),
+    },
+    {
+      label: 'Notifications',
+      to: '/citizen/notifications',
+      icon: (
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <path
+            d="M10 3.5a4 4 0 00-4 4v2.1c0 .62-.22 1.21-.62 1.69L4.25 12.6a.8.8 0 00.61 1.33h10.28a.8.8 0 00.61-1.33l-1.13-1.3A2.6 2.6 0 0114 9.6V7.5a4 4 0 00-4-4z"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinejoin="round"
+          />
+          <path d="M8.2 15.2a2 2 0 003.6 0" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
         </svg>
       ),
     },
