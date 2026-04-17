@@ -220,6 +220,79 @@ def _group_categories(complaints: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
   return grouped
 
 
+def _notification_stage_label(stage: str) -> str:
+  if stage == 'submitted':
+    return 'Submitted'
+  if stage == 'under-review':
+    return 'Under Review'
+  if stage == 'in-progress':
+    return 'In Progress'
+  if stage == 'resolved':
+    return 'Resolved'
+  return 'Updated'
+
+
+def _notification_message(stage: str, complaint: Dict[str, Any], role: str) -> str:
+  title = complaint.get('title') or 'Complaint update'
+
+  if stage == 'submitted':
+    return f'New complaint reported: {title}' if role == 'admin' else f'Your complaint has been submitted: {title}'
+
+  if stage == 'under-review':
+    return f'Complaint moved to review: {title}' if role == 'admin' else f'Your complaint is under review: {title}'
+
+  if stage == 'in-progress':
+    return f'Work has started on complaint: {title}'
+
+  if stage == 'resolved':
+    return f'Complaint resolved: {title}'
+
+  return f'Update on complaint: {title}'
+
+
+def _to_sort_timestamp(value: str) -> float:
+  try:
+    return datetime.fromisoformat((value or '').replace('Z', '+00:00')).timestamp()
+  except Exception:
+    return 0
+
+
+def _build_notifications(complaints: List[Dict[str, Any]], role: str) -> List[Dict[str, Any]]:
+  notifications: List[Dict[str, Any]] = []
+
+  for complaint in complaints:
+    complaint_id = complaint.get('id')
+    created_at = complaint.get('createdAt') or _iso_now()
+    resolved_at = complaint.get('resolvedAt')
+    status = complaint.get('status') or 'pending'
+    history = complaint.get('statusHistory') or _build_default_history(created_at, status, resolved_at)
+
+    for entry in history:
+      stage = entry.get('stage')
+      if not stage:
+        continue
+
+      timestamp = entry.get('at') or created_at
+      notifications.append({
+        'id': f'{complaint_id}-{stage}',
+        'complaintId': complaint_id,
+        'title': _notification_stage_label(stage),
+        'message': _notification_message(stage, complaint, role),
+        'timestamp': timestamp,
+        'area': complaint.get('area') or 'Unknown Area',
+        'category': complaint.get('category') or 'Other',
+        'stage': stage,
+      })
+
+  deduped_by_id: Dict[str, Dict[str, Any]] = {}
+  for notification in notifications:
+    deduped_by_id[notification['id']] = notification
+
+  deduped = list(deduped_by_id.values())
+  deduped.sort(key=lambda item: _to_sort_timestamp(item.get('timestamp') or ''), reverse=True)
+  return deduped
+
+
 def _success_response(message: str, data: Any) -> Dict[str, Any]:
   return {
     'status': 'success',
@@ -270,6 +343,14 @@ async def get_dashboard_data():
     'allComplaints': complaints,
     'recentComplaints': complaints[:6],
   }
+
+
+@router.get('/notifications', tags=['Notifications'])
+async def get_notifications(role: str = 'citizen'):
+  normalized_role = 'admin' if str(role).strip().lower() == 'admin' else 'citizen'
+  complaints = _sorted_complaints_desc(_read_complaints_store())
+  notifications = _build_notifications(complaints, normalized_role)
+  return {'count': len(notifications), 'data': notifications}
 
 
 @router.get('/complaints', tags=['Complaints'])

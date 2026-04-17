@@ -257,6 +257,15 @@ export async function fetchComplaintsList() {
   return { data: response.data?.data ?? [] }
 }
 
+export async function fetchNotifications(role) {
+  const response = await api.get('/notifications', {
+    params: {
+      role: role === 'admin' ? 'admin' : 'citizen',
+    },
+  })
+  return { data: response.data?.data ?? [] }
+}
+
 export function createComplaint(payload) {
   return api.post('/complaints', {
     title: payload.title,
