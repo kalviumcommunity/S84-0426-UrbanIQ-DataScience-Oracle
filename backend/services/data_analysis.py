@@ -115,6 +115,12 @@ def load_and_clean_data(raw_data: List[Dict[str, Any]]) -> pd.DataFrame:
     df['createdAt'] = _parse_datetime_series(df['createdAt'])
     df['resolvedAt'] = _parse_datetime_series(df['resolvedAt'])
 
+    # Keep resolution analytics robust for datasets that mark status=resolved but omit resolvedAt.
+    resolved_without_timestamp = df['status'].eq('resolved') & df['resolvedAt'].isna()
+    if resolved_without_timestamp.any():
+        fallback_resolved = df['createdAt'].where(df['createdAt'].notna(), df['date'])
+        df.loc[resolved_without_timestamp, 'resolvedAt'] = fallback_resolved[resolved_without_timestamp]
+
     missing_date_rows = df['date'].isna() & df['createdAt'].notna()
     if missing_date_rows.any():
         df.loc[missing_date_rows, 'date'] = df.loc[missing_date_rows, 'createdAt']
@@ -451,6 +457,139 @@ def _build_performance_flags(df: pd.DataFrame) -> List[str]:
     return list(dict.fromkeys(flags))
 
 
+def _safe_area_name(value: Any) -> str:
+    return _normalize_text(value, fallback='Unknown')
+
+
+def get_most_problematic_category(df: pd.DataFrame) -> Dict[str, Any]:
+    """
+    Finds the category with the strongest complaint pressure using a simple rule score.
+    """
+    if df.empty or 'category' not in df.columns:
+        return {'category': 'Unknown', 'score': 0.0, 'complaint_count': 0, 'unresolved_count': 0}
+
+    rows: List[Dict[str, Any]] = []
+    for category, group in df.groupby('category'):
+        complaint_count = int(len(group))
+        unresolved_count = int((group['status'].fillna('').astype(str).str.lower() != 'resolved').sum())
+        unresolved_ratio = (unresolved_count / complaint_count) if complaint_count else 0.0
+        score = round((complaint_count * 0.7) + (unresolved_count * 1.2) + (unresolved_ratio * 10), 2)
+        rows.append(
+            {
+                'category': str(category),
+                'score': score,
+                'complaint_count': complaint_count,
+                'unresolved_count': unresolved_count,
+            }
+        )
+
+    if not rows:
+        return {'category': 'Unknown', 'score': 0.0, 'complaint_count': 0, 'unresolved_count': 0}
+
+    rows.sort(
+        key=lambda row: (
+            row['score'],
+            row['unresolved_count'],
+            row['complaint_count'],
+        ),
+        reverse=True,
+    )
+    return rows[0]
+
+
+def _area_resolution_rows(df: pd.DataFrame) -> List[Dict[str, Any]]:
+    grouping_column = _get_grouping_column(df)
+    if not grouping_column or df.empty:
+        return []
+
+    rows: List[Dict[str, Any]] = []
+    for area_name, group in df.groupby(grouping_column):
+        resolved_mask = group['status'].fillna('').astype(str).str.lower().eq('resolved')
+        resolved_rows = group.loc[resolved_mask, ['createdAt', 'resolvedAt']].dropna(subset=['createdAt', 'resolvedAt'])
+        if resolved_rows.empty:
+            continue
+
+        durations = (resolved_rows['resolvedAt'] - resolved_rows['createdAt']).dt.total_seconds() / (60 * 60 * 24)
+        durations = durations[durations >= 0]
+        if durations.empty:
+            continue
+
+        rows.append(
+            {
+                'area': _safe_area_name(area_name),
+                'average_resolution_time_days': round(float(durations.mean()), 2),
+                'resolved_complaints': int(len(durations)),
+            }
+        )
+
+    return rows
+
+
+def get_fastest_resolving_area(df: pd.DataFrame) -> Dict[str, Any]:
+    """
+    Returns the area with the minimum average resolution time.
+    """
+    rows = _area_resolution_rows(df)
+    if not rows:
+        return {'area': None, 'average_resolution_time_days': None, 'resolved_complaints': 0}
+
+    rows.sort(key=lambda row: (row['average_resolution_time_days'], -row['resolved_complaints']))
+    return rows[0]
+
+
+def get_slowest_resolving_area(df: pd.DataFrame) -> Dict[str, Any]:
+    """
+    Returns the area with the maximum average resolution time.
+    """
+    rows = _area_resolution_rows(df)
+    if not rows:
+        return {'area': None, 'average_resolution_time_days': None, 'resolved_complaints': 0}
+
+    rows.sort(key=lambda row: (row['average_resolution_time_days'], row['resolved_complaints']), reverse=True)
+    return rows[0]
+
+
+def get_trend_direction(df: pd.DataFrame) -> str:
+    """
+    Detects complaint direction from month-over-month totals.
+    """
+    monthly = _monthly_count_frame(df)
+    if len(monthly) < 2:
+        return 'stable'
+
+    previous_count = int(monthly.iloc[-2]['count'])
+    current_count = int(monthly.iloc[-1]['count'])
+
+    if current_count > previous_count:
+        return 'increasing'
+    if current_count < previous_count:
+        return 'decreasing'
+    return 'stable'
+
+
+def _to_json_serializable(value: Any) -> Any:
+    """
+    Recursively converts known pandas / numpy scalars into plain JSON-safe Python types.
+    """
+    if isinstance(value, dict):
+        return {str(key): _to_json_serializable(val) for key, val in value.items()}
+    if isinstance(value, list):
+        return [_to_json_serializable(item) for item in value]
+    if isinstance(value, tuple):
+        return [_to_json_serializable(item) for item in value]
+    if isinstance(value, pd.Timestamp):
+        return value.isoformat()
+
+    has_item = hasattr(value, 'item')
+    if has_item:
+        try:
+            return value.item()
+        except Exception:
+            pass
+
+    return value
+
+
 def generate_decision_support_intelligence(df: pd.DataFrame) -> Dict[str, Any]:
     """
     Builds a small decision-support layer on top of the existing analytics outputs.
@@ -500,7 +639,7 @@ def generate_full_report(raw_data: List[Dict[str, Any]]) -> Dict[str, Any]:
     df = load_and_clean_data(raw_data)
 
     if df.empty:
-        return {
+        return _to_json_serializable({
             "total_complaints": 0,
             "top_issues": [],
             "area_wise": [],
@@ -521,9 +660,26 @@ def generate_full_report(raw_data: List[Dict[str, Any]]) -> Dict[str, Any]:
                 "monthly": [],
             },
             "recurring_issues": [],
-        }
+            "most_problematic_category": {
+                "category": "Unknown",
+                "score": 0.0,
+                "complaint_count": 0,
+                "unresolved_count": 0,
+            },
+            "fastest_resolving_area": {
+                "area": None,
+                "average_resolution_time_days": None,
+                "resolved_complaints": 0,
+            },
+            "slowest_resolving_area": {
+                "area": None,
+                "average_resolution_time_days": None,
+                "resolved_complaints": 0,
+            },
+            "trend_direction": "stable",
+        })
 
-    return {
+    return _to_json_serializable({
         "total_complaints": int(len(df)),
         "top_issues": get_top_categories(df),
         "area_wise": get_area_wise_complaints(df),
@@ -537,4 +693,8 @@ def generate_full_report(raw_data: List[Dict[str, Any]]) -> Dict[str, Any]:
             "monthly": get_time_based_trends(df, freq='M'),
         },
         "recurring_issues": detect_recurring_issues(df),
-    }
+        "most_problematic_category": get_most_problematic_category(df),
+        "fastest_resolving_area": get_fastest_resolving_area(df),
+        "slowest_resolving_area": get_slowest_resolving_area(df),
+        "trend_direction": get_trend_direction(df),
+    })
