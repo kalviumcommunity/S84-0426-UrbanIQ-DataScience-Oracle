@@ -872,6 +872,435 @@
   font-weight: 700;
 }
 
+/* Enhanced Team Management Styles */
+
+.dashboard-page__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.dashboard-page__header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.dashboard-view-toggle {
+  border: 1px solid #d0dce3;
+  background: #ffffff;
+  color: #475569;
+  border-radius: 8px;
+  min-height: 38px;
+  padding: 0 14px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dashboard-view-toggle:hover {
+  background: #f3f7fa;
+  border-color: #0f766e;
+}
+
+.dashboard-view-toggle.is-active {
+  background: #0f766e;
+  color: #ffffff;
+  border-color: #0f766e;
+}
+
+/* Progress Bars on Team Cards */
+.dashboard-card--insight {
+  transition: all 0.2s ease;
+}
+
+.dashboard-card--insight:hover {
+  box-shadow: 0 4px 16px rgba(44, 168, 161, 0.15);
+}
+
+.dashboard-card--insight-active {
+  background: linear-gradient(135deg, #f0fdf9 0%, #eef6f8 100%);
+  border: 2px solid #0f766e;
+}
+
+.dashboard-filter-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  background: #d1fae5;
+  color: #065f46;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-weight: 600;
+  margin-left: 8px;
+}
+
+.dashboard-progress-bar {
+  margin-top: 12px;
+  height: 6px;
+  background: #e5e7eb;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.dashboard-progress-bar__fill {
+  height: 100%;
+  background: linear-gradient(90deg, #0f766e 0%, #14b8a6 100%);
+  transition: width 0.3s ease;
+}
+
+/* Filter Tabs */
+.dashboard-filter-tabs {
+  display: flex;
+  gap: 8px;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+
+.dashboard-filter-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #d0dce3;
+  background: #ffffff;
+  color: #475569;
+  border-radius: 8px;
+  min-height: 36px;
+  padding: 0 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dashboard-filter-tab:hover {
+  background: #f3f7fa;
+  border-color: #0f766e;
+}
+
+.dashboard-filter-tab.is-active {
+  background: #0f766e;
+  color: #ffffff;
+  border-color: #0f766e;
+}
+
+.dashboard-filter-tab__icon {
+  font-size: 1rem;
+}
+
+.dashboard-filter-hint {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: #0f766e;
+  background: #d1fae5;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+/* Bulk Actions */
+.dashboard-bulk-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin: 12px 0;
+}
+
+.dashboard-bulk-actions__count {
+  font-weight: 600;
+  color: #1e40af;
+  font-size: 0.9rem;
+}
+
+.dashboard-bulk-actions__select {
+  flex: 1;
+  border: 1px solid #bfdbfe;
+  background: #ffffff;
+  color: #111827;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.dashboard-bulk-actions__select:focus {
+  outline: none;
+  border-color: #0f766e;
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+}
+
+.dashboard-bulk-actions__btn {
+  min-height: 36px;
+  padding: 0 12px;
+  background: #1e40af;
+  color: #ffffff;
+  border: 0;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dashboard-bulk-actions__btn:hover:not(:disabled) {
+  background: #1e3a8a;
+  box-shadow: 0 4px 12px rgba(30, 64, 175, 0.2);
+}
+
+.dashboard-bulk-actions__btn:disabled {
+  background: #cbd5e1;
+  cursor: not-allowed;
+}
+
+.dashboard-bulk-actions__clear {
+  border: 0;
+  background: transparent;
+  color: #475569;
+  cursor: pointer;
+  font-size: 0.85rem;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.dashboard-bulk-actions__clear:hover {
+  color: #000;
+}
+
+/* Compact Table */
+.dashboard-table__checkbox {
+  width: 44px;
+  text-align: center;
+  padding: 12px 0 !important;
+}
+
+.dashboard-table__checkbox input {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #0f766e;
+}
+
+.dashboard-table td,
+.dashboard-table th {
+  padding: 10px 0;
+}
+
+.dashboard-table tbody tr {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.dashboard-table__row--selected {
+  background: #eef6f8;
+}
+
+.dashboard-table__empty {
+  text-align: center;
+  padding: 32px !important;
+  color: #9ca3af;
+}
+
+/* Dropdown Actions */
+.dashboard-row-actions-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dashboard-row-actions-dropdown__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #d0dce3;
+  background: #ffffff;
+  color: #0f766e;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+}
+
+.dashboard-row-actions-dropdown__trigger:hover:not(:disabled) {
+  background: #f3f7fa;
+  border-color: #0f766e;
+  box-shadow: 0 0 0 2px rgba(15, 118, 110, 0.1);
+}
+
+.dashboard-row-actions-dropdown__trigger:disabled {
+  background: #f3f4f6;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.dashboard-row-actions-dropdown__menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 6px;
+  background: #ffffff;
+  border: 1px solid #d0dce3;
+  border-radius: 8px;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.12);
+  z-index: 20;
+  min-width: 140px;
+}
+
+.dashboard-row-actions-dropdown__item {
+  display: block;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: #475569;
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.dashboard-row-actions-dropdown__item:first-child {
+  border-radius: 7px 7px 0 0;
+}
+
+.dashboard-row-actions-dropdown__item:last-child {
+  border-radius: 0 0 7px 7px;
+}
+
+.dashboard-row-actions-dropdown__item:hover:not(:disabled) {
+  background: #f3f7fa;
+  color: #0f766e;
+}
+
+.dashboard-row-actions-dropdown__item.is-selected {
+  background: #d1fae5;
+  color: #065f46;
+  font-weight: 600;
+}
+
+.dashboard-row-actions-dropdown__item:disabled {
+  color: #d1d5db;
+  cursor: not-allowed;
+}
+
+/* Map View */
+.dashboard-card--map {
+  min-height: 500px;
+}
+
+.dashboard-map-container {
+  margin-top: 16px;
+}
+
+.dashboard-map-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.dashboard-location-pin {
+  background: linear-gradient(135deg, #f0fdf9 0%, #eef6f8 100%);
+  border: 1px solid #a7d8cc;
+  border-radius: 10px;
+  padding: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dashboard-location-pin:hover {
+  box-shadow: 0 6px 20px rgba(15, 118, 110, 0.15);
+  transform: translateY(-2px);
+  border-color: #0f766e;
+}
+
+.dashboard-location-pin--urgent {
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  border-color: #fca5a5;
+}
+
+.dashboard-location-pin--urgent:hover {
+  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.15);
+  border-color: #dc2626;
+}
+
+.dashboard-location-pin__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.dashboard-location-pin__header strong {
+  font-size: 1rem;
+  color: #0f172a;
+}
+
+.dashboard-location-pin__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  background: #0f766e;
+  color: #ffffff;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.dashboard-location-pin--urgent .dashboard-location-pin__count {
+  background: #dc2626;
+}
+
+.dashboard-location-pin__details {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin: 6px 0;
+}
+
+.dashboard-location-pin__unassigned {
+  display: inline-block;
+  font-weight: 600;
+  color: #dc2626;
+}
+
+.dashboard-location-pin__assigned {
+  display: inline-block;
+  font-weight: 600;
+  color: #0f766e;
+}
+
+.dashboard-location-pin__teams {
+  display: flex;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.dashboard-location-pin__team-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  background: #0f766e;
+  color: #ffffff;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.dashboard-map-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  color: #9ca3af;
+  text-align: center;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .dashboard-page__header,
   .dashboard-card--stat,

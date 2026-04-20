@@ -145,6 +145,12 @@ function Complaints() {
   const [showTimeline, setShowTimeline] = useState(false)
   const [isReportModalOpen, setIsReportModalOpen] = useState(false)
   const [hasManualCategorySelection, setHasManualCategorySelection] = useState(false)
+  const [predictionMeta, setPredictionMeta] = useState({
+    state: 'idle',
+    category: '',
+    confidence: null,
+    message: 'Type at least 12 characters in details to get an AI category suggestion.',
+  })
 
   const loadComplaints = async () => {
     try {
@@ -189,6 +195,12 @@ function Complaints() {
 
     if (name === 'category') {
       setHasManualCategorySelection(true)
+      setPredictionMeta({
+        state: 'manual',
+        category: '',
+        confidence: null,
+        message: 'You selected category manually. AI suggestion is paused.',
+      })
     }
 
     if (name === 'location') {
@@ -215,18 +227,46 @@ function Complaints() {
 
     const detailsText = formData.details.trim()
     if (detailsText.length < 12) {
+      const remainingChars = 12 - detailsText.length
+      setPredictionMeta({
+        state: 'idle',
+        category: '',
+        confidence: null,
+        message:
+          detailsText.length === 0
+            ? 'Type at least 12 characters in details to get an AI category suggestion.'
+            : `Add ${remainingChars} more character${remainingChars === 1 ? '' : 's'} for AI suggestion.`,
+      })
       return
     }
 
     const debounceTimer = window.setTimeout(async () => {
       try {
+        setPredictionMeta({
+          state: 'loading',
+          category: '',
+          confidence: null,
+          message: 'Analyzing complaint details...',
+        })
+
         const prediction = await predictComplaintCategory(detailsText)
         const predictedCategory = prediction?.predicted_category ?? prediction?.category ?? ''
+        const confidence =
+          typeof prediction?.confidence === 'number'
+            ? Math.round(prediction.confidence * 100)
+            : null
 
-        if (!predictedCategory || !categoryOptions.includes(predictedCategory)) {
+        if (!predictedCategory) {
+          setPredictionMeta({
+            state: 'idle',
+            category: '',
+            confidence: null,
+            message: 'No AI category prediction available. You can select category manually.',
+          })
           return
         }
 
+        // Always set the predicted category, regardless of confidence
         setFormData((currentValue) => {
           if (currentValue.details.trim() !== detailsText || hasManualCategorySelection) {
             return currentValue
@@ -237,8 +277,28 @@ function Complaints() {
             category: predictedCategory,
           }
         })
+
+        // Show all predictions with confidence level
+        const confidenceLabel =
+          confidence !== null && confidence < 50
+            ? `(${confidence}% confidence - AI is uncertain)`
+            : confidence !== null
+              ? `(${confidence}% confidence)`
+              : ''
+
+        setPredictionMeta({
+          state: 'success',
+          category: predictedCategory,
+          confidence,
+          message: `AI predicted: ${predictedCategory} ${confidenceLabel}`.trim(),
+        })
       } catch {
-        // Keep current form behavior if prediction fails.
+        setPredictionMeta({
+          state: 'error',
+          category: '',
+          confidence: null,
+          message: 'AI suggestion is currently unavailable. You can select category manually.',
+        })
       }
     }, 500)
 
@@ -291,6 +351,12 @@ function Complaints() {
       await createComplaint(formData)
       setFormData(initialForm)
       setHasManualCategorySelection(false)
+      setPredictionMeta({
+        state: 'idle',
+        category: '',
+        confidence: null,
+        message: 'Type at least 12 characters in details to get an AI category suggestion.',
+      })
       await loadComplaints()
       setSuccessMessage('Your complaint has been submitted and is visible to both users and admins.')
       setShowAdvanced(false)
@@ -714,6 +780,21 @@ function Complaints() {
                   required
                 />
               </label>
+
+              <div className={`complaints-page__ai-card complaints-page__ai-card--${predictionMeta.state} complaints-page__form-field--full`}>
+                <div className="complaints-page__ai-card-header">
+                  <div>
+                    <p className="complaints-page__ai-card-eyebrow">AI prediction</p>
+                    <h3>
+                      {predictionMeta.category ? predictionMeta.category : 'Waiting for a clear signal'}
+                    </h3>
+                  </div>
+                  {predictionMeta.confidence !== null ? (
+                    <span className="complaints-page__ai-confidence">{predictionMeta.confidence}%</span>
+                  ) : null}
+                </div>
+                <p className="complaints-page__ai-card-message">{predictionMeta.message}</p>
+              </div>
 
               {smartSuggestions.length ? (
                 <div className="complaints-page__suggestions complaints-page__form-field--full">
