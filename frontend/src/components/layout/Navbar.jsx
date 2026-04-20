@@ -1,10 +1,45 @@
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getProfileRouteForRole, getSession, logoutUser } from '../../services/auth.js'
+import NotificationsPanel from '../notifications/NotificationsPanel.jsx'
 
 function Navbar({ searchQuery, onSearchQueryChange, onToggleSidebar }) {
   const navigate = useNavigate()
   const session = getSession()
-  const latestNotifications = 3
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
+  const notificationsPopoverRef = useRef(null)
+  const notificationsButtonRef = useRef(null)
+
+  useEffect(() => {
+    if (!isNotificationsOpen) {
+      return undefined
+    }
+
+    function handlePointerDown(event) {
+      const popoverNode = notificationsPopoverRef.current
+      const buttonNode = notificationsButtonRef.current
+
+      if (popoverNode?.contains(event.target) || buttonNode?.contains(event.target)) {
+        return
+      }
+
+      setIsNotificationsOpen(false)
+    }
+
+    function handleKeyDown(event) {
+      if (event.key === 'Escape') {
+        setIsNotificationsOpen(false)
+      }
+    }
+
+    document.addEventListener('pointerdown', handlePointerDown)
+    document.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [isNotificationsOpen])
 
   function handleLogout() {
     logoutUser()
@@ -46,10 +81,13 @@ function Navbar({ searchQuery, onSearchQueryChange, onToggleSidebar }) {
 
       <div className="topbar__actions">
         <button
+          ref={notificationsButtonRef}
           className="topbar__icon-btn"
           type="button"
           aria-label="Notifications"
-          onClick={() => navigate(session?.user?.role === 'admin' ? '/admin/notifications' : '/citizen/notifications')}
+          aria-expanded={isNotificationsOpen}
+          aria-controls="topbar-notifications-panel"
+          onClick={() => setIsNotificationsOpen((value) => !value)}
         >
           <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
             <path
@@ -60,8 +98,14 @@ function Navbar({ searchQuery, onSearchQueryChange, onToggleSidebar }) {
             />
             <path d="M8.2 15.2a2 2 0 003.6 0" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
           </svg>
-          <span className="topbar__badge">{latestNotifications}</span>
+          <span className="topbar__badge">3</span>
         </button>
+
+        {isNotificationsOpen ? (
+          <div ref={notificationsPopoverRef} id="topbar-notifications-panel" className="topbar__notifications-popover">
+            <NotificationsPanel mode="popover" onClose={() => setIsNotificationsOpen(false)} />
+          </div>
+        ) : null}
 
         <details className="topbar__profile">
           <summary className="topbar__profile-summary">
