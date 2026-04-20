@@ -11,7 +11,6 @@ import HowItWorks from './pages/HowItWorks.jsx'
 import GetStarted from './pages/GetStarted.jsx'
 import Login from './pages/Login.jsx'
 import Notifications from './pages/Notifications.jsx'
-import Profile from './pages/Profile.jsx'
 import Signup from './pages/Signup.jsx'
 
 function App() {
@@ -34,7 +33,7 @@ function App() {
           <Route path="admin/analytics" element={<AdminAnalytics />} />
           <Route path="admin/team-management" element={<AdminTeamManagement />} />
           <Route path="admin/notifications" element={<Notifications />} />
-          <Route path="admin/profile" element={<Profile />} />
+          <Route path="admin/profile" element={<Navigate to="/admin/overview" replace />} />
         </Route>
       </Route>
 
@@ -44,7 +43,7 @@ function App() {
           <Route path="citizen/dashboard" element={<Complaints />} />
           <Route path="citizen/how-it-works" element={<HowItWorks />} />
           <Route path="citizen/notifications" element={<Notifications />} />
-          <Route path="citizen/profile" element={<Profile />} />
+          <Route path="citizen/profile" element={<Navigate to="/citizen/dashboard" replace />} />
         </Route>
       </Route>
 

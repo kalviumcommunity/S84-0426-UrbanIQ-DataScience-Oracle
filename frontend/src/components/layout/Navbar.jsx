@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getProfileRouteForRole, getSession, logoutUser } from '../../services/auth.js'
+import { getSession, logoutUser } from '../../services/auth.js'
 import NotificationsPanel from '../notifications/NotificationsPanel.jsx'
 
 function Navbar({ searchQuery, onSearchQueryChange, onToggleSidebar }) {
@@ -122,9 +122,6 @@ function Navbar({ searchQuery, onSearchQueryChange, onToggleSidebar }) {
           </summary>
 
           <div className="topbar__profile-menu">
-            <button type="button" onClick={() => navigate(getProfileRouteForRole(session?.user?.role))}>
-              View profile
-            </button>
             <button type="button" onClick={handleLogout}>
               Logout
             </button>
