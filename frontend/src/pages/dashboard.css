@@ -681,12 +681,35 @@
 .dashboard-status {
   display: inline-flex;
   align-items: center;
-  min-height: 30px;
-  padding: 0 12px;
+  gap: 4px;
+  min-height: 24px;
+  padding: 2px 8px;
   border-radius: 999px;
-  font-size: 0.82rem;
+  font-size: 12px;
+  line-height: 1;
   font-weight: 600;
+  white-space: nowrap;
   transition: all 0.2s ease;
+}
+
+.dashboard-status__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+  font-size: 11px;
+  line-height: 1;
+}
+
+.dashboard-status__text {
+  display: inline-block;
+}
+
+.dashboard-table__status-col {
+  width: 120px;
+  max-width: 120px;
+  white-space: nowrap;
 }
 
 .dashboard-status--pending {
@@ -1394,5 +1417,20 @@
 
   .dashboard-section-header--row {
     flex-direction: column;
+  }
+
+  .dashboard-table__status-col {
+    width: 44px;
+    max-width: 44px;
+  }
+
+  .dashboard-status {
+    min-height: 20px;
+    padding: 2px 6px;
+    justify-content: center;
+  }
+
+  .dashboard-status__text {
+    display: none;
   }
 }

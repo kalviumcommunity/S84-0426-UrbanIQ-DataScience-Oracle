@@ -21,6 +21,12 @@ const filterTabs = [
   { id: 'urgent', label: 'Urgent', icon: '🚨' },
 ]
 
+const statusMeta = {
+  pending: { icon: '🟡', label: 'Pending' },
+  'in-progress': { icon: '🔵', label: 'In Progress' },
+  resolved: { icon: '🟢', label: 'Resolved' },
+}
+
 function AdminTeamManagement() {
   const [dashboard, setDashboard] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -322,7 +328,7 @@ function AdminTeamManagement() {
                       />
                     </th>
                     <th>Title</th>
-                    <th>Status</th>
+                    <th className="dashboard-table__status-col">Status</th>
                     <th>Area</th>
                     <th>Assigned To</th>
                     <th>Action</th>
@@ -346,9 +352,17 @@ function AdminTeamManagement() {
                         <td>
                           <strong>{complaint.title}</strong>
                         </td>
-                        <td>
-                          <span className={`dashboard-status dashboard-status--${complaint.status}`}>
-                            {getStatusLabel(complaint.status)}
+                        <td className="dashboard-table__status-col">
+                          <span
+                            className={`dashboard-status dashboard-status--${complaint.status}`}
+                            title={statusMeta[complaint.status]?.label ?? getStatusLabel(complaint.status)}
+                          >
+                            <span className="dashboard-status__icon" aria-hidden="true">
+                              {statusMeta[complaint.status]?.icon ?? '🟡'}
+                            </span>
+                            <span className="dashboard-status__text">
+                              {statusMeta[complaint.status]?.label ?? getStatusLabel(complaint.status)}
+                            </span>
                           </span>
                         </td>
                         <td>{complaint.area}</td>

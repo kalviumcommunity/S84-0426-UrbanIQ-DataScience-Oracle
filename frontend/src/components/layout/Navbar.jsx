@@ -1,12 +1,17 @@
 import { useEffect, useRef, useState } from 'react'
-import { getSession } from '../../services/auth.js'
+import { useNavigate } from 'react-router-dom'
+import { getProfileRouteForRole, getSession, logoutUser } from '../../services/auth.js'
 import NotificationsPanel from '../notifications/NotificationsPanel.jsx'
 
 function Navbar({ searchQuery, onSearchQueryChange, onToggleSidebar }) {
+  const navigate = useNavigate()
   const session = getSession()
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
   const notificationsPopoverRef = useRef(null)
   const notificationsButtonRef = useRef(null)
+  const profileMenuRef = useRef(null)
+  const profileButtonRef = useRef(null)
 
   useEffect(() => {
     if (!isNotificationsOpen) {
@@ -38,6 +43,48 @@ function Navbar({ searchQuery, onSearchQueryChange, onToggleSidebar }) {
       document.removeEventListener('keydown', handleKeyDown)
     }
   }, [isNotificationsOpen])
+
+  useEffect(() => {
+    if (!isProfileMenuOpen) {
+      return undefined
+    }
+
+    function handlePointerDown(event) {
+      const menuNode = profileMenuRef.current
+      const buttonNode = profileButtonRef.current
+
+      if (menuNode?.contains(event.target) || buttonNode?.contains(event.target)) {
+        return
+      }
+
+      setIsProfileMenuOpen(false)
+    }
+
+    function handleKeyDown(event) {
+      if (event.key === 'Escape') {
+        setIsProfileMenuOpen(false)
+      }
+    }
+
+    document.addEventListener('pointerdown', handlePointerDown)
+    document.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [isProfileMenuOpen])
+
+  function handleOpenProfileSettings() {
+    setIsProfileMenuOpen(false)
+    navigate(getProfileRouteForRole(session?.user?.role))
+  }
+
+  function handleLogout() {
+    setIsProfileMenuOpen(false)
+    logoutUser()
+    navigate('/get-started', { replace: true })
+  }
 
   return (
     <header className="topbar">
@@ -100,17 +147,38 @@ function Navbar({ searchQuery, onSearchQueryChange, onToggleSidebar }) {
           </div>
         ) : null}
 
-        <div className="topbar__profile-static" aria-label="Signed in user">
-          <div className="topbar__avatar" aria-hidden="true">
-            <svg viewBox="0 0 20 20" fill="none">
-              <circle cx="10" cy="7" r="2.7" stroke="currentColor" strokeWidth="1.5" />
-              <path d="M4.8 16c1.05-2.2 2.9-3.3 5.2-3.3s4.15 1.1 5.2 3.3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-            </svg>
-          </div>
-          <div>
-            <span className="topbar__user-label">{session?.user?.name ?? 'test'}</span>
-            <p className="topbar__user-subtitle">{session?.user?.role === 'admin' ? 'Admin account' : 'Citizen account'}</p>
-          </div>
+        <div className="topbar__profile-menu-wrap">
+          <button
+            ref={profileButtonRef}
+            className="topbar__profile-trigger"
+            type="button"
+            aria-label="User menu"
+            aria-expanded={isProfileMenuOpen}
+            aria-controls="topbar-profile-menu"
+            onClick={() => setIsProfileMenuOpen((value) => !value)}
+          >
+            <div className="topbar__avatar" aria-hidden="true">
+              <svg viewBox="0 0 20 20" fill="none">
+                <circle cx="10" cy="7" r="2.7" stroke="currentColor" strokeWidth="1.5" />
+                <path d="M4.8 16c1.05-2.2 2.9-3.3 5.2-3.3s4.15 1.1 5.2 3.3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+            </div>
+          </button>
+
+          {isProfileMenuOpen ? (
+            <div ref={profileMenuRef} id="topbar-profile-menu" className="topbar__profile-popover" role="menu">
+              <div className="topbar__profile-popover-head">
+                <span className="topbar__profile-name">{session?.user?.name ?? 'User'}</span>
+                <p className="topbar__profile-role">{session?.user?.role === 'admin' ? 'Admin account' : 'Citizen account'}</p>
+              </div>
+              <button type="button" className="topbar__profile-item" role="menuitem" onClick={handleOpenProfileSettings}>
+                Profile settings
+              </button>
+              <button type="button" className="topbar__profile-item topbar__profile-item--danger" role="menuitem" onClick={handleLogout}>
+                Log out
+              </button>
+            </div>
+          ) : null}
         </div>
       </div>
     </header>
