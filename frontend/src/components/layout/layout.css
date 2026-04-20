@@ -113,11 +113,84 @@
   gap: 14px;
 }
 
-.topbar__profile-static {
-  display: flex;
+.topbar__profile-menu-wrap {
+  position: relative;
+}
+
+.topbar__profile-trigger {
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding-left: 2px;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.topbar__profile-trigger:hover {
+  background: #eff6ff;
+}
+
+.topbar__profile-popover {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 196px;
+  z-index: 45;
+  border-radius: 12px;
+  border: 1px solid #dde5eb;
+  background: #ffffff;
+  box-shadow: 0 16px 30px rgba(15, 23, 42, 0.12);
+  overflow: hidden;
+}
+
+.topbar__profile-popover-head {
+  padding: 10px 12px;
+  border-bottom: 1px solid #edf2f6;
+  background: #f8fafc;
+}
+
+.topbar__profile-name {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.topbar__profile-role {
+  margin: 2px 0 0;
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.topbar__profile-item {
+  width: 100%;
+  border: 0;
+  background: #ffffff;
+  color: #1f2937;
+  text-align: left;
+  min-height: 40px;
+  padding: 0 12px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.topbar__profile-item:hover {
+  background: #f3f7fa;
+}
+
+.topbar__profile-item--danger {
+  color: #b91c1c;
+}
+
+.topbar__profile-item--danger:hover {
+  background: #fef2f2;
 }
 
 .topbar__center {
@@ -201,20 +274,6 @@
 .topbar__avatar svg {
   width: 18px;
   height: 18px;
-}
-
-.topbar__user-label {
-  display: block;
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #111827;
-  line-height: 1.1;
-}
-
-.topbar__user-subtitle {
-  margin: 0;
-  font-size: 0.88rem;
-  color: #64748b;
 }
 
 .topbar__logout-btn {

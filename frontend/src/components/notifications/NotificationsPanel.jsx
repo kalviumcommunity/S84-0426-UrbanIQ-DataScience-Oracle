@@ -162,19 +162,19 @@ function NotificationsPanel({ mode = 'page', onClose }) {
         </div>
       </header>
 
-      <section className="notifications-page__stats-grid">
-        <Card className="notifications-page__stat-card">
-          <p className="notifications-page__stat-label">Total</p>
-          <p className="notifications-page__stat-value">{summary.total}</p>
-        </Card>
-        <Card className="notifications-page__stat-card">
-          <p className="notifications-page__stat-label">Unread</p>
-          <p className="notifications-page__stat-value">{summary.unread}</p>
-        </Card>
-        <Card className="notifications-page__stat-card">
-          <p className="notifications-page__stat-label">Read</p>
-          <p className="notifications-page__stat-value">{summary.read}</p>
-        </Card>
+      <section className="notifications-page__stats-bar" aria-label="Notification summary">
+        <button type="button" className={`notifications-page__stat-chip${activeFilter === 'all' ? ' is-active' : ''}`} onClick={() => setActiveFilter('all')}>
+          <span>Total</span>
+          <strong>{summary.total}</strong>
+        </button>
+        <button type="button" className={`notifications-page__stat-chip${activeFilter === 'unread' ? ' is-active' : ''}`} onClick={() => setActiveFilter('unread')}>
+          <span>Unread</span>
+          <strong>{summary.unread}</strong>
+        </button>
+        <button type="button" className={`notifications-page__stat-chip${activeFilter === 'read' ? ' is-active' : ''}`} onClick={() => setActiveFilter('read')}>
+          <span>Read</span>
+          <strong>{summary.read}</strong>
+        </button>
       </section>
 
       <section className="notifications-page__filter-bar" aria-label="Notification filters">
@@ -202,20 +202,27 @@ function NotificationsPanel({ mode = 'page', onClose }) {
                 <li key={item.id} className={`notifications-page__item${isRead ? ' is-read' : ' is-unread'}`}>
                   <div className="notifications-page__item-main">
                     <div className="notifications-page__item-top">
-                      <span className="notifications-page__item-title">{item.title}</span>
                       <span className={`notifications-page__pill notifications-page__pill--${item.stage}`}>{item.stage.replace('-', ' ')}</span>
                     </div>
-                    <p className="notifications-page__item-message">{item.message}</p>
+                    <p className="notifications-page__item-title">{item.message}</p>
                     <p className="notifications-page__item-meta">
                       {item.area} • {item.category} • {formatTimestamp(item.timestamp)}
                     </p>
                   </div>
                   {!isRead ? (
-                    <Button className="notifications-page__item-action" onClick={() => handleMarkAsRead(item.id)}>
-                      Mark read
-                    </Button>
+                    <button
+                      type="button"
+                      className="notifications-page__item-action-dot"
+                      onClick={() => handleMarkAsRead(item.id)}
+                      aria-label="Mark notification as read"
+                      title="Mark as read"
+                    >
+                      <span aria-hidden="true" />
+                    </button>
                   ) : (
-                    <span className="notifications-page__read-label">Read</span>
+                    <span className="notifications-page__read-label" aria-label="Read">
+                      <span aria-hidden="true">✓</span>
+                    </span>
                   )}
                 </li>
               )
