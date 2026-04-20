@@ -1,10 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { getProfileRouteForRole, getSession, logoutUser } from '../../services/auth.js'
+import { getSession } from '../../services/auth.js'
 import NotificationsPanel from '../notifications/NotificationsPanel.jsx'
 
 function Navbar({ searchQuery, onSearchQueryChange, onToggleSidebar }) {
-  const navigate = useNavigate()
   const session = getSession()
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
   const notificationsPopoverRef = useRef(null)
@@ -40,11 +38,6 @@ function Navbar({ searchQuery, onSearchQueryChange, onToggleSidebar }) {
       document.removeEventListener('keydown', handleKeyDown)
     }
   }, [isNotificationsOpen])
-
-  function handleLogout() {
-    logoutUser()
-    navigate('/get-started', { replace: true })
-  }
 
   return (
     <header className="topbar">
@@ -107,29 +100,18 @@ function Navbar({ searchQuery, onSearchQueryChange, onToggleSidebar }) {
           </div>
         ) : null}
 
-        <details className="topbar__profile">
-          <summary className="topbar__profile-summary">
-            <div className="topbar__avatar" aria-hidden="true">
-              <svg viewBox="0 0 20 20" fill="none">
-                <circle cx="10" cy="7" r="2.7" stroke="currentColor" strokeWidth="1.5" />
-                <path d="M4.8 16c1.05-2.2 2.9-3.3 5.2-3.3s4.15 1.1 5.2 3.3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-              </svg>
-            </div>
-            <div>
-              <span className="topbar__user-label">{session?.user?.name ?? 'test'}</span>
-              <p className="topbar__user-subtitle">{session?.user?.role === 'admin' ? 'Admin account' : 'Citizen account'}</p>
-            </div>
-          </summary>
-
-          <div className="topbar__profile-menu">
-            <button type="button" onClick={() => navigate(getProfileRouteForRole(session?.user?.role))}>
-              Profile
-            </button>
-            <button type="button" onClick={handleLogout}>
-              Logout
-            </button>
+        <div className="topbar__profile-static" aria-label="Signed in user">
+          <div className="topbar__avatar" aria-hidden="true">
+            <svg viewBox="0 0 20 20" fill="none">
+              <circle cx="10" cy="7" r="2.7" stroke="currentColor" strokeWidth="1.5" />
+              <path d="M4.8 16c1.05-2.2 2.9-3.3 5.2-3.3s4.15 1.1 5.2 3.3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
           </div>
-        </details>
+          <div>
+            <span className="topbar__user-label">{session?.user?.name ?? 'test'}</span>
+            <p className="topbar__user-subtitle">{session?.user?.role === 'admin' ? 'Admin account' : 'Citizen account'}</p>
+          </div>
+        </div>
       </div>
     </header>
   )
