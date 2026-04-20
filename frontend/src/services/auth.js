@@ -114,3 +114,7 @@ export function logoutUser() {
 export function getDefaultRouteForRole(role) {
   return role === 'admin' ? '/admin/overview' : '/citizen/dashboard'
 }
+
+export function getProfileRouteForRole(role) {
+  return role === 'admin' ? '/admin/profile' : '/citizen/profile'
+}
