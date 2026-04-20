@@ -1,12 +1,39 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getDefaultRouteForRole, getSession, logoutUser, updateProfile } from '../services/auth.js'
 
-function InfoRow({ label, value }) {
+function SectionTitle({ children }) {
   return (
-    <div className="rounded-xl bg-slate-50 px-4 py-3">
-      <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{label}</p>
-      <p className="mt-1 break-words text-sm font-medium text-slate-900">{value}</p>
+    <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
+      {children}
+    </h2>
+  )
+}
+
+function ReadOnlyField({ label, value }) {
+  return (
+    <div className="space-y-1.5">
+      <dt className="text-xs font-medium uppercase tracking-wide text-slate-500">{label}</dt>
+      <dd className="text-sm font-medium text-slate-900 break-words">{value}</dd>
+    </div>
+  )
+}
+
+function FormField({ id, name, type, label, value, onChange }) {
+  return (
+    <div className="space-y-2">
+      <label htmlFor={id} className="text-xs font-medium text-slate-500">
+        {label}
+      </label>
+      <input
+        id={id}
+        name={name}
+        type={type}
+        value={value}
+        onChange={onChange}
+        required
+        className="h-11 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-teal-100"
+      />
     </div>
   )
 }
@@ -26,6 +53,16 @@ function Profile() {
       email: user?.email ?? '',
     })
   }, [user?.email, user?.name])
+
+  const profileDetails = useMemo(() => {
+    const role = user?.role ?? 'citizen'
+
+    return [
+      { label: 'Full name', value: user?.name || 'Unnamed account' },
+      { label: 'Email address', value: user?.email || 'No email found' },
+      { label: 'Account role', value: role === 'admin' ? 'Admin' : 'Citizen' },
+    ]
+  }, [user])
 
   function handleBack() {
     navigate(getDefaultRouteForRole(user?.role), { replace: true })
@@ -88,98 +125,100 @@ function Profile() {
     .join('') || 'A'
 
   return (
-    <div className="mx-auto w-full max-w-[700px] px-4 py-6 sm:px-6 sm:py-8">
-      <section className="rounded-xl bg-white p-6 shadow-[0_10px_30px_rgba(15,23,42,0.08)] sm:p-8">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex min-w-0 items-center gap-4">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-teal-600 text-lg font-bold text-white" aria-hidden="true">
+    <main className="mx-auto w-full max-w-[720px] px-4 py-6 sm:px-6 sm:py-8">
+      <section className="rounded-xl bg-white p-5 shadow-[0_12px_30px_rgba(15,23,42,0.08)] sm:p-6">
+        <header className="flex items-center justify-between gap-4">
+          <div className="flex min-w-0 items-center gap-3 sm:gap-4">
+            <div
+              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-teal-100 text-base font-semibold text-teal-700 sm:h-14 sm:w-14 sm:text-lg"
+              aria-hidden="true"
+            >
               {initials}
             </div>
             <div className="min-w-0">
               <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Admin profile</p>
-              <h1 className="mt-1 text-2xl font-bold leading-tight text-slate-900 sm:text-3xl">{user?.name || 'Unnamed account'}</h1>
-              <p className="mt-1 break-all text-sm text-slate-600">{user?.email || 'No email found'}</p>
+              <h1 className="mt-1 text-2xl font-bold leading-tight text-slate-900 sm:text-3xl">
+                {user?.name || 'Unnamed account'}
+              </h1>
+              <p className="mt-1 text-sm text-slate-600 break-all">{user?.email || 'No email found'}</p>
             </div>
           </div>
-          <span className="inline-flex w-fit items-center rounded-full bg-teal-50 px-3 py-1 text-xs font-semibold text-teal-700">
+
+          <p className="inline-flex shrink-0 items-center rounded-full bg-teal-50 px-3 py-1 text-xs font-semibold text-teal-700">
             {user?.role === 'admin' ? 'Admin' : 'Citizen'}
-          </span>
-        </div>
+          </p>
+        </header>
 
-        <div className="my-6 h-px bg-slate-100" />
+        <div className="my-6 h-px bg-slate-200" />
 
-        <div className="space-y-4">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Account information</p>
-            <div className="mt-3 space-y-3">
-              <InfoRow label="Full name" value={user?.name || 'Unnamed account'} />
-              <InfoRow label="Email address" value={user?.email || 'No email found'} />
-              <InfoRow label="Role" value={user?.role === 'admin' ? 'Admin' : 'Citizen'} />
-            </div>
-          </div>
+        <section className="space-y-4">
+          <SectionTitle>Account information</SectionTitle>
+          <dl className="grid gap-4 sm:grid-cols-2">
+            {profileDetails.map((detail) => (
+              <ReadOnlyField key={detail.label} label={detail.label} value={detail.value} />
+            ))}
+          </dl>
+        </section>
 
-          <div className="pt-3">
-            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">Edit profile</p>
-            <form className="mt-3 space-y-4" onSubmit={handleSubmit}>
-              <div>
-                <label htmlFor="profile-name" className="text-xs font-medium text-slate-500">Full name</label>
-                <input
-                  id="profile-name"
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                  className="mt-2 h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-teal-100"
-                />
-              </div>
+        <div className="my-6 h-px bg-slate-200" />
 
-              <div>
-                <label htmlFor="profile-email" className="text-xs font-medium text-slate-500">Email address</label>
-                <input
-                  id="profile-email"
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  className="mt-2 h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-teal-100"
-                />
-              </div>
+        <section className="space-y-4">
+          <SectionTitle>Edit profile</SectionTitle>
 
-              {error ? <p className="text-sm font-medium text-red-600">{error}</p> : null}
-              {successMessage ? <p className="text-sm font-medium text-teal-700">{successMessage}</p> : null}
+          <form className="space-y-4" onSubmit={handleSubmit}>
+            <FormField
+              id="profile-name"
+              name="name"
+              type="text"
+              label="Full name"
+              value={formData.name}
+              onChange={handleChange}
+            />
 
-              <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:flex-wrap">
+            <FormField
+              id="profile-email"
+              name="email"
+              type="email"
+              label="Email address"
+              value={formData.email}
+              onChange={handleChange}
+            />
+
+            {error ? <p className="text-sm font-medium text-red-600">{error}</p> : null}
+            {successMessage ? <p className="text-sm font-medium text-teal-700">{successMessage}</p> : null}
+
+            <div className="pt-2">
+              <SectionTitle>Actions</SectionTitle>
+              <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
                 <button
+                  className="inline-flex h-11 w-full items-center justify-center rounded-lg bg-teal-600 px-5 text-sm font-semibold text-white transition hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
                   type="submit"
                   disabled={isSaving}
-                  className="inline-flex h-11 w-full items-center justify-center rounded-xl bg-teal-600 px-5 text-sm font-semibold text-white transition hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
                 >
                   {isSaving ? 'Saving...' : 'Save Changes'}
                 </button>
 
                 <button
+                  className="inline-flex h-11 w-full items-center justify-center rounded-lg border border-slate-300 bg-white px-5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 sm:w-auto"
                   type="button"
                   onClick={handleBack}
-                  className="inline-flex h-11 w-full items-center justify-center rounded-xl bg-slate-100 px-5 text-sm font-semibold text-slate-700 transition hover:bg-slate-200 sm:w-auto"
                 >
                   Back to Dashboard
                 </button>
 
                 <button
+                  className="inline-flex h-11 w-full items-center justify-center rounded-lg px-2 text-sm font-semibold text-red-600 transition hover:bg-red-50 sm:w-auto"
                   type="button"
                   onClick={handleLogout}
-                  className="inline-flex h-11 w-full items-center justify-center rounded-xl bg-transparent px-4 text-sm font-semibold text-red-600 transition hover:bg-red-50 sm:w-auto"
                 >
                   Logout
                 </button>
               </div>
-            </form>
-          </div>
-        </div>
+            </div>
+          </form>
+        </section>
       </section>
-    </div>
+    </main>
   )
 }
 
