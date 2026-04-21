@@ -146,53 +146,52 @@ function NotificationsPanel({ mode = 'page', onClose }) {
 
   return (
     <div className={`notifications-page${isPopover ? ' notifications-page--popover' : ''}`} role={isPopover ? 'dialog' : undefined} aria-label="Notifications panel">
-      <header className="notifications-page__header">
-        <div>
-          <p className="notifications-page__eyebrow">Updates</p>
-          <h1>Notification Center</h1>
-          <p>Track complaint activity and stay up to date on workflow changes.</p>
-        </div>
-        <div className="notifications-page__header-actions">
-          {isPopover ? (
-            <button type="button" className="notifications-page__close" onClick={onClose} aria-label="Close notifications panel">
-              Close
+      {!isPopover && (
+        <>
+          <header className="notifications-page__header">
+            <div>
+              <p className="notifications-page__eyebrow">Updates</p>
+              <h1>Notification Center</h1>
+              <p>Track complaint activity and stay up to date on workflow changes.</p>
+            </div>
+            <div className="notifications-page__header-actions">
+              <Button className="notifications-page__mark-all" onClick={handleMarkAllAsRead}>Mark all as read</Button>
+            </div>
+          </header>
+
+          <section className="notifications-page__stats-bar" aria-label="Notification summary">
+            <button type="button" className={`notifications-page__stat-chip${activeFilter === 'all' ? ' is-active' : ''}`} onClick={() => setActiveFilter('all')}>
+              <span>Total</span>
+              <strong>{summary.total}</strong>
             </button>
-          ) : null}
-          <Button className="notifications-page__mark-all" onClick={handleMarkAllAsRead}>Mark all as read</Button>
-        </div>
-      </header>
+            <button type="button" className={`notifications-page__stat-chip${activeFilter === 'unread' ? ' is-active' : ''}`} onClick={() => setActiveFilter('unread')}>
+              <span>Unread</span>
+              <strong>{summary.unread}</strong>
+            </button>
+            <button type="button" className={`notifications-page__stat-chip${activeFilter === 'read' ? ' is-active' : ''}`} onClick={() => setActiveFilter('read')}>
+              <span>Read</span>
+              <strong>{summary.read}</strong>
+            </button>
+          </section>
 
-      <section className="notifications-page__stats-bar" aria-label="Notification summary">
-        <button type="button" className={`notifications-page__stat-chip${activeFilter === 'all' ? ' is-active' : ''}`} onClick={() => setActiveFilter('all')}>
-          <span>Total</span>
-          <strong>{summary.total}</strong>
-        </button>
-        <button type="button" className={`notifications-page__stat-chip${activeFilter === 'unread' ? ' is-active' : ''}`} onClick={() => setActiveFilter('unread')}>
-          <span>Unread</span>
-          <strong>{summary.unread}</strong>
-        </button>
-        <button type="button" className={`notifications-page__stat-chip${activeFilter === 'read' ? ' is-active' : ''}`} onClick={() => setActiveFilter('read')}>
-          <span>Read</span>
-          <strong>{summary.read}</strong>
-        </button>
-      </section>
+          <section className="notifications-page__filter-bar" aria-label="Notification filters">
+            {filterTabs.map((tab) => (
+              <button
+                key={tab.value}
+                type="button"
+                className={`notifications-page__filter-btn${activeFilter === tab.value ? ' is-active' : ''}`}
+                onClick={() => setActiveFilter(tab.value)}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </section>
 
-      <section className="notifications-page__filter-bar" aria-label="Notification filters">
-        {filterTabs.map((tab) => (
-          <button
-            key={tab.value}
-            type="button"
-            className={`notifications-page__filter-btn${activeFilter === tab.value ? ' is-active' : ''}`}
-            onClick={() => setActiveFilter(tab.value)}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </section>
+          {message ? <p className="notifications-page__message">{message}</p> : null}
+        </>
+      )}
 
-      {message ? <p className="notifications-page__message">{message}</p> : null}
-
-      <Card className="notifications-page__feed-card">
+      <Card className={isPopover ? 'notifications-page__feed-card notifications-page__feed-card--popover' : 'notifications-page__feed-card'}>
         {filteredNotifications.length ? (
           <ul className="notifications-page__feed" role="list">
             {filteredNotifications.map((item) => {
