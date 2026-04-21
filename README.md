@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>🏛️ Argus</h1>
+  <h1>🏛️ Oracle</h1>
   <h3>Municipal Grievance Analytics System</h3>
 </div>
 
@@ -17,9 +17,9 @@ In modern cities, citizens constantly report issues—overflowing garbage, water
 
 ---
 
-## 🚀 The Solution — Argus
+## 🚀 The Solution — Oracle
 
-**Argus** transforms raw grievance data into actionable, real-time insights. 
+**Oracle** transforms raw grievance data into actionable, real-time insights. 
 Instead of just storing complaints as dead text, our system analyzes patterns to empower municipalities to:
 
 * 🎯 **Identify** recurring issues before they escalate.
