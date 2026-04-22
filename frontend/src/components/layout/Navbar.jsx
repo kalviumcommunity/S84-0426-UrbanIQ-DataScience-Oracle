@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getProfileRouteForRole, getSession, logoutUser } from '../../services/auth.js'
 import NotificationsPanel from '../notifications/NotificationsPanel.jsx'
+import logo from '../../assets/logo.png'
 
 function Navbar({ searchQuery, onSearchQueryChange, onToggleSidebar }) {
   const navigate = useNavigate()
@@ -88,17 +89,17 @@ function Navbar({ searchQuery, onSearchQueryChange, onToggleSidebar }) {
 
   return (
     <header className="topbar">
-      <div className="topbar__brand-wrap">
+      <div className="topbar__brand-wrap topbar__brand-wrap--logo">
         <button className="topbar__menu-btn" type="button" onClick={onToggleSidebar} aria-label="Toggle sidebar">
           <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
             <path d="M4 5.5h12M4 10h12M4 14.5h12" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
           </svg>
         </button>
         <div className="topbar__brand-avatar" aria-hidden="true">
-          A
+          <img className="topbar__brand-logo" src={logo} alt="" />
         </div>
         <div>
-          <h1 className="topbar__brand">Argus</h1>
+          <h1 className="topbar__brand">Oracle</h1>
           <p className="topbar__brand-subtitle">Citizen complaint tracking</p>
         </div>
       </div>

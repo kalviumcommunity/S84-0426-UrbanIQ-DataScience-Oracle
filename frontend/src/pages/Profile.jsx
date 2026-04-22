@@ -28,7 +28,7 @@ const TIMEZONES = [
 ]
 
 function getProfilePrefsKey(email) {
-  return `argus-profile-prefs-${email || 'default'}`
+  return `oracle-profile-prefs-${email || 'default'}`
 }
 
 function Profile() {
@@ -356,7 +356,7 @@ function Profile() {
           {activeTab === 'settings' && (
             <form onSubmit={handleSubmit} className="profile-panel" role="tabpanel" aria-label="Account settings panel">
               <h2 className="profile-card__title">Account Settings</h2>
-              <p className="profile-card__subtitle">Edit the details used across your Argus workspace.</p>
+              <p className="profile-card__subtitle">Edit the details used across your Oracle workspace.</p>
 
               {!isEditingProfile ? (
                 <div className="profile-settings-shell" data-state="view">

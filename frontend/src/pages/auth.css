@@ -1,8 +1,8 @@
 :root {
-  --argus-light: #b8e3e9;
-  --argus-muted: #93b1b5;
-  --argus-primary: #4f7c82;
-  --argus-dark: #0b2e33;
+  --oracle-light: #b8e3e9;
+  --oracle-muted: #93b1b5;
+  --oracle-primary: #4f7c82;
+  --oracle-dark: #0b2e33;
 }
 
 .auth-page {
@@ -297,7 +297,7 @@
   text-transform: uppercase;
   letter-spacing: 0.12em;
   font-weight: 700;
-  color: var(--argus-light);
+  color: var(--oracle-light);
 }
 
 .live-ticker__viewport {
@@ -345,7 +345,7 @@
   margin: 0 0 14px;
   text-transform: uppercase;
   letter-spacing: 0.16em;
-  color: var(--argus-primary);
+  color: var(--oracle-primary);
   font-size: 0.78rem;
   font-weight: 800;
 }
@@ -353,7 +353,7 @@
 .landing-hero h1,
 .auth-card h1 {
   margin: 0;
-  color: var(--argus-dark);
+  color: var(--oracle-dark);
   font-size: clamp(2.5rem, 4.2vw, 4.3rem);
   line-height: 1.02;
 }
@@ -379,7 +379,7 @@
   min-height: 46px;
   padding: 0 20px;
   border-radius: 14px;
-  background: linear-gradient(135deg, var(--argus-primary), #3f676d);
+  background: linear-gradient(135deg, var(--oracle-primary), #3f676d);
   color: #ffffff;
   font-weight: 700;
   border: 1px solid transparent;
@@ -397,7 +397,7 @@
 
 .auth-link-button--secondary {
   background: #ffffff;
-  color: var(--argus-primary);
+  color: var(--oracle-primary);
   border: 1px solid rgba(79, 124, 130, 0.24);
 }
 
@@ -424,7 +424,7 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: var(--argus-primary);
+  background: var(--oracle-primary);
   box-shadow: 0 0 0 8px rgba(44, 168, 161, 0.14);
 }
 
@@ -584,7 +584,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--argus-primary);
+  color: var(--oracle-primary);
   background: rgba(79, 124, 130, 0.1);
 }
 
@@ -595,7 +595,7 @@
 
 .landing-feature-card h2 {
   margin: 16px 0 8px;
-  color: var(--argus-dark);
+  color: var(--oracle-dark);
   font-size: 1.18rem;
 }
 
@@ -615,7 +615,7 @@
 
 .landing-steps__header h2 {
   margin: 4px 0 0;
-  color: var(--argus-dark);
+  color: var(--oracle-dark);
   font-size: 1.42rem;
 }
 
@@ -657,7 +657,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--argus-primary);
+  color: var(--oracle-primary);
   background: rgba(79, 124, 130, 0.12);
 }
 
@@ -674,7 +674,7 @@
 .landing-step-card h3 {
   margin: 12px 0 6px;
   font-size: 1rem;
-  color: var(--argus-dark);
+  color: var(--oracle-dark);
 }
 
 .landing-step-card p {

@@ -77,7 +77,7 @@ function GetStarted() {
 
         <div className="landing-hero">
           <div className="landing-hero__copy">
-            <p className="auth-eyebrow">Argus municipal grievance system</p>
+            <p className="auth-eyebrow">Oracle municipal grievance system</p>
             <h1>Manage and resolve city issues, faster.</h1>
             <p className="auth-lead">
               Real-time insights for smarter municipal decisions. Keep complaints moving with a clear path for review and resolution.

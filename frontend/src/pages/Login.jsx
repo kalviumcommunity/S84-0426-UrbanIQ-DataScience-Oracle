@@ -113,7 +113,7 @@ function Login() {
 
       <section className="auth-login__right">
         <div className="auth-login__panel">
-          <h2>Welcome to Argus</h2>
+          <h2>Welcome to Oracle</h2>
           <p>
             Monitor, analyze, and resolve city complaints efficiently.
           </p>
