@@ -116,6 +116,7 @@ function Navbar({ searchQuery, onSearchQueryChange, onToggleSidebar }) {
             value={searchQuery}
             onChange={(event) => onSearchQueryChange(event.target.value)}
           />
+          <span className="topbar__search-shortcut" aria-hidden="true">Ctrl + K</span>
         </label>
       </div>
 
