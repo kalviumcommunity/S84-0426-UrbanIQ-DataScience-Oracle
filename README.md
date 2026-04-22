@@ -56,7 +56,7 @@ Instead of just storing complaints as dead text, our system analyzes patterns to
 
 ## 🔐 UX Enhancement — Show Password Option
 
-To improve usability and reduce login friction, Argus includes a “Show Password” toggle in authentication forms.
+To improve usability and reduce login friction, Oracle includes a “Show Password” toggle in authentication forms.
 
 ✨ Why It Matters
 👁️ Improves accuracy by letting users verify their input

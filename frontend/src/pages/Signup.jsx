@@ -166,7 +166,7 @@ function Signup() {
 
       <section className="auth-login__right">
         <div className="auth-login__panel">
-          <h2>Join Argus as a citizen</h2>
+          <h2>Join Oracle as a citizen</h2>
           <p>
             Report local issues instantly, track updates in real time, and stay informed until every case is resolved.
           </p>

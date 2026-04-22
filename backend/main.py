@@ -25,7 +25,7 @@ async def lifespan(app: FastAPI):
 # Initialize the FastAPI App
 app = FastAPI(
     title=settings.PROJECT_NAME,
-    description="Backend for Argus: Municipal Grievance Analytics System",
+    description="Backend for Oracle: Municipal Grievance Analytics System",
     version="1.0.0",
     lifespan=lifespan
 )

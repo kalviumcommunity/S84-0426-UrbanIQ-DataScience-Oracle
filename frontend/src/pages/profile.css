@@ -1,5 +1,5 @@
 .profile-page {
-  --argus-accent: #2563eb;
+  --oracle-accent: #2563eb;
 }
 
 .profile-page {
@@ -201,7 +201,7 @@
 
 .profile-nav-btn.is-active {
   background: #eff6ff;
-  color: var(--argus-accent);
+  color: var(--oracle-accent);
   border-color: #bfdbfe;
 }
 
@@ -242,8 +242,8 @@
 }
 
 .profile-tab.is-active {
-  border-bottom-color: var(--argus-accent);
-  color: var(--argus-accent);
+  border-bottom-color: var(--oracle-accent);
+  color: var(--oracle-accent);
 }
 
 .profile-panel {
@@ -477,7 +477,7 @@
   height: 36px;
   border-radius: 10px;
   background: #eff6ff;
-  color: var(--argus-accent);
+  color: var(--oracle-accent);
   display: inline-flex;
   align-items: center;
   justify-content: center;

@@ -81,29 +81,45 @@
   gap: 12px;
 }
 
+.topbar__brand-wrap--logo {
+  gap: 10px;
+  transition: transform 0.2s ease;
+}
+
+.topbar__brand-wrap--logo:hover {
+  transform: translateY(-1px) scale(1.02);
+}
+
 .topbar__brand-avatar {
-  width: 34px;
-  height: 34px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
-  background: #2563eb;
+  background: transparent;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: #ffffff;
-  font-weight: 700;
-  font-size: 0.95rem;
+  padding: 4px;
+}
+
+.topbar__brand-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: inherit;
 }
 
 .topbar__brand {
   margin: 0;
-  font-size: 1.55rem;
+  font-size: 1.7rem;
   line-height: 1;
   color: #111827;
+  font-weight: 700;
 }
 
 .topbar__brand-subtitle {
   margin: 2px 0 0;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   color: #6b7280;
 }
 
