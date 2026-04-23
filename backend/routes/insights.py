@@ -5,18 +5,32 @@ from datetime import datetime, timezone
 import json
 import os
 
-from services.data_analysis import (
+try:
+  from ..services.data_analysis import (
     load_and_clean_data,
     get_top_categories,
     get_area_wise_complaints,
     get_time_based_trends,
     generate_full_report
-)
-from services.category_predictor import (
+  )
+  from ..services.category_predictor import (
     predict_category,
     is_predictor_ready,
     get_trained_categories,
-)
+  )
+except ImportError:
+  from services.data_analysis import (
+    load_and_clean_data,
+    get_top_categories,
+    get_area_wise_complaints,
+    get_time_based_trends,
+    generate_full_report
+  )
+  from services.category_predictor import (
+    predict_category,
+    is_predictor_ready,
+    get_trained_categories,
+  )
 
 router = APIRouter()
 

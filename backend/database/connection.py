@@ -1,5 +1,9 @@
 from motor.motor_asyncio import AsyncIOMotorClient
-from config.settings import settings
+
+try:
+    from ..config.settings import settings
+except ImportError:
+    from config.settings import settings
 
 class Database:
     client: AsyncIOMotorClient = None

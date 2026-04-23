@@ -2,10 +2,17 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
-from database.connection import connect_to_mongo, close_mongo_connection
-from config.settings import settings
-from services.category_predictor import initialize_predictor
-from routes.insights import _insights_analysis_source_data
+
+try:
+    from .database.connection import connect_to_mongo, close_mongo_connection
+    from .config.settings import settings
+    from .services.category_predictor import initialize_predictor
+    from .routes.insights import _insights_analysis_source_data
+except ImportError:
+    from database.connection import connect_to_mongo, close_mongo_connection
+    from config.settings import settings
+    from services.category_predictor import initialize_predictor
+    from routes.insights import _insights_analysis_source_data
 
 # Define the lifespan of the FastAPI app to manage startup and shutdown events
 @asynccontextmanager
@@ -47,8 +54,12 @@ async def global_exception_handler(request: Request, exc: Exception):
     )
 
 # Import and include routers
-from routes.insights import router as insights_router
-from routes.auth import router as auth_router
+try:
+    from .routes.insights import router as insights_router
+    from .routes.auth import router as auth_router
+except ImportError:
+    from routes.insights import router as insights_router
+    from routes.auth import router as auth_router
 app.include_router(insights_router, prefix="/api/v1")
 app.include_router(auth_router, prefix="/api/v1")
 
