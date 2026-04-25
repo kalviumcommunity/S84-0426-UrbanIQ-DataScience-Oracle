@@ -70,3 +70,7 @@ When disabled, it reverts to masked (••••••••) format
 Password is only visible on the user’s screen
 Automatically re-masks when the field loses focus (optional enhancement)
 Works entirely on the client-side—no sensitive data exposure
+
+System.Collections.Hashtable.Header
+System.Collections.Hashtable.Body
+
